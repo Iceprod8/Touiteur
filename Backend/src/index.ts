@@ -1,5 +1,5 @@
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import { startStandaloneServer } from "@apollo/server/dist/esm/standalone/index.js";
 import { typeDefs } from "./schema.js";
 import { resolvers } from "./resolvers.js";
 import db from "./datasources/db.js";
