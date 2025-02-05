@@ -1,8 +1,6 @@
-import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
 
 import { useState } from 'react';
-import Pagination from 'react-bootstrap/Pagination';
-import { Card, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import NavbarComponent from './navbar';
@@ -28,10 +26,7 @@ function App() {
   return (
     <div>
          <Router>
-      {/* Header Dynamique */}
       <NavbarComponent isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} />
-
-      {/* Gestion des Routes */}
       <Routes>
         <Route path="/" element={<AllCardsComponents />} />
         <Route path="/features"/>
