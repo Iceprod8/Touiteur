@@ -1,8 +1,28 @@
-import { Resolvers } from "./types.js";
+import { Resolvers, Speciality } from "./types.js";
 import { hashPassword } from "./modules/auth.js";
+import { signIn } from "./resolvers/mutations/signIn.js";
+
+const doctorsData = [
+  {
+    name: "Samia Mekame",
+    speciality: Speciality.Ophtalmologist,
+  },
+  {
+    name: "Catherine Bedoy",
+    speciality: Speciality.Ophtalmologist,
+  },
+];
 
 export const resolvers: Resolvers = {
-  Query: {},
+  Query: {
+    doctors: (_, { specialities }) => {
+      return specialities
+        ? doctorsData.filter((doctor) =>
+            specialities.includes(doctor.speciality)
+          )
+        : doctorsData;
+    },
+  },
   Mutation: {
     createUser: async (_, { username, password }, context) => {
       try {
@@ -31,5 +51,6 @@ export const resolvers: Resolvers = {
         };
       }
     },
+    signIn,
   },
 };
