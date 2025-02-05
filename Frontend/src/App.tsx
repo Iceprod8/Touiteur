@@ -6,6 +6,8 @@ import './App.css';
 import NavbarComponent from './navbar';
 import AllCardsComponents from './pages/allCards';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from './pages/Login';
+import Register from './pages/Register';
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql', 
@@ -31,7 +33,8 @@ function App() {
         <Route path="/" element={<AllCardsComponents />} />
         <Route path="/features"/>
         <Route path="/pricing"/>
-        <Route path="/login"/>
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/register" element={<Register/>}/>
       </Routes>
     </Router>
     </div>
