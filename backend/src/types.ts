@@ -44,7 +44,7 @@ export type GetUserByNameResponse = {
   code: Scalars['Int']['output'];
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
-  username?: Maybe<Scalars['String']['output']>;
+  user?: Maybe<User>;
 };
 
 export type Mutation = {
@@ -235,7 +235,7 @@ export type GetUserByNameResponseResolvers<ContextType = DataSourceContext, Pare
   code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
