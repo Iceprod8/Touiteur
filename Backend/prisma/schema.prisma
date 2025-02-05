@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,7 +8,33 @@ datasource db {
 }
 
 model User {
-  id String @id @unique @default(uuid())
+  id       String @id @unique @default(uuid())
   username String @unique
   password String
+
+  posts         Post[]    @relation("PostAuthor")
+  comments      Comment[] @relation("CommentAuthor")
+  likedPosts    Post[]    @relation("UserLikesPost")
+  likedComments Comment[] @relation("UserLikesComment")
+}
+
+model Post {
+  id       String    @id @unique @default(uuid())
+  content  String
+  comments Comment[] @relation("PostComments")
+  likedBy  User[]    @relation("UserLikesPost")
+
+  authorId String
+  author   User   @relation("PostAuthor", fields: [authorId], references: [id])
+}
+
+model Comment {
+  id      String @id @unique @default(uuid())
+  content String
+  likedBy User[] @relation("UserLikesComment")
+
+  authorId String
+  author   User   @relation("CommentAuthor", fields: [authorId], references: [id])
+  postId   String
+  post     Post   @relation("PostComments", fields: [postId], references: [id])
 }
