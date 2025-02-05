@@ -2,45 +2,19 @@ import { Resolvers } from "./types.js";
 import { hashPassword } from "./modules/auth.js";
 import { signIn } from "./resolvers/mutations/signIn.js";
 import { DataSourceContext } from "./context.js";
-import { getPosts } from "./resolvers/query/PostQuerry.js";
+import { getPosts } from "./resolvers/querys/postQuerry.js";
+import {
+  getUser,
+  getUserById,
+  getUserByName,
+} from "./resolvers/querys/userQuery.js";
 
 export const resolvers: Resolvers = {
   Query: {
+    getUser,
+    getUserByName,
+    getUserById,
     getPosts,
-    getUsers: async (_, __, context) => {
-      const user = await context.dataSources.db.user.findMany();
-      return user;
-    },
-    getUserByName: async (_, { username }, context) => {
-      try {
-        const user = await context.dataSources.db.user.findFirst({
-          where: { username },
-        });
-
-        if (!user) {
-          return {
-            code: 400,
-            message: "Utilisateur introuvable",
-            success: false,
-            username: null,
-          };
-        }
-
-        return {
-          code: 201,
-          message: "Utilisateur trouvé",
-          success: true,
-          username: user.username,
-        };
-      } catch (error) {
-        return {
-          code: 500,
-          message: "Une erreur est survenue",
-          success: false,
-          username: null,
-        };
-      }
-    },
   },
 
   Mutation: {
