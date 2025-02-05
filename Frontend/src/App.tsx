@@ -9,8 +9,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 
 const client = new ApolloClient({
-  // uri: 'http://localhost:4000/graphql', 
-  uri: 'https://rickandmortyapi.com/graphql',
+  uri: 'http://localhost:4000/graphql', 
+  //uri: 'https://rickandmortyapi.com/graphql',
   cache: new InMemoryCache(),
 });
 
@@ -60,7 +60,9 @@ function App() {
   if (error) return <h1>Erreur: {error.message}</h1>;
 
   return (
-    <div>
+    
+
+    /*<div>
       <br></br>
       <h1>All characters</h1>
       <br></br>
@@ -88,7 +90,7 @@ function App() {
           </Col>
         ))}
       </Row>
-    </div>
+    </div>*/
 
   );
 }
