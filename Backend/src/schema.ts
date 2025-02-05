@@ -3,36 +3,28 @@ import gql from "graphql-tag";
 export const typeDefs = gql`
   type Query {
     getUsers: [User]!
-    getUserById(id: ID!): GetUserByIdResponse
-    getUserByName(username: String!): GetUserByNameResponse
+    getUserById(id: ID!): CGUserResponse
+    getUserByName(username: String!): CGUserResponse
     getPosts: [Post]!
-    getPostById(id: ID!): GetPostByIdResponse
+    getPostById(id: ID!): CGUDPostResponse
     getCommentsByPostId(postId: ID!): [Comment!]!
   }
 
   type Mutation {
-    createUser(username: String!, password: String!): CreateUserResponse
+    createUser(username: String!, password: String!): CGUserResponse
     signIn(username: String!, password: String!): SignInUserResponse
-    createPost(content: String!, authorId: ID!): CreatePostResponse
-    deletePost(id: ID!): DeletePostResponse
-    updatePost(id: ID!, content: String!): UpdatePostResponse
-    createComment(
-      content: String!
-      authorId: ID!
-      postId: ID!
-    ): CreateCommentResponse
-    deleteComment(id: ID!): DeleteCommentResponse
-    likePost(postId: ID!, userId: ID!): LikePostResponse
-    likeComment(commentId: ID!, userId: ID!): LikeCommentResponse
+    createPost(content: String!, authorId: ID!): CGUDPostResponse
+    deletePost(id: ID!): CGUDPostResponse
+    updatePost(id: ID!, content: String!): CGUDPostResponse
   }
 
   type User {
     id: ID!
     username: String!
-    posts: [Post!]!
-    likedPosts: [Post!]!
-    comments: [Comment!]!
-    likedComments: [Comment!]!
+    posts: [Post!]
+    likedPosts: [Post!]
+    comments: [Comment!]
+    likedComments: [Comment!]
   }
 
   type Post {
@@ -40,8 +32,8 @@ export const typeDefs = gql`
     content: String!
     authorId: ID!
     author: User!
-    comments: [Comment!]!
-    likedBy: [User!]!
+    comments: [Comment!]
+    likedBy: [User!]
   }
 
   type Comment {
@@ -52,21 +44,7 @@ export const typeDefs = gql`
     likedBy: [User!]!
   }
 
-  type GetUserByIdResponse {
-    code: Int!
-    success: Boolean!
-    message: String!
-    user: User
-  }
-
-  type GetUserByNameResponse {
-    code: Int!
-    success: Boolean!
-    message: String!
-    user: User
-  }
-
-  type CreateUserResponse {
+  type CGUserResponse {
     code: Int!
     success: Boolean!
     message: String!
@@ -80,57 +58,10 @@ export const typeDefs = gql`
     token: String
   }
 
-  type GetPostByIdResponse {
+  type CGUDPostResponse {
     code: Int!
     success: Boolean!
     message: String!
     post: Post
-  }
-
-  type CreatePostResponse {
-    code: Int!
-    success: Boolean!
-    message: String!
-    post: Post
-  }
-
-  type DeletePostResponse {
-    code: Int!
-    success: Boolean!
-    message: String!
-  }
-
-  type UpdatePostResponse {
-    code: Int!
-    success: Boolean!
-    message: String!
-    post: Post
-  }
-
-  type CreateCommentResponse {
-    code: Int!
-    success: Boolean!
-    message: String!
-    comment: Comment
-  }
-
-  type DeleteCommentResponse {
-    code: Int!
-    success: Boolean!
-    message: String!
-  }
-
-  type LikePostResponse {
-    code: Int!
-    success: Boolean!
-    message: String!
-    post: Post
-  }
-
-  type LikeCommentResponse {
-    code: Int!
-    success: Boolean!
-    message: String!
-    comment: Comment
   }
 `;

@@ -39,6 +39,7 @@ export const getPostById: QueryResolvers["getPostById"] = async (
   try {
     const post = await dataSources.db.post.findUnique({
       where: { id },
+      include: { author: true },
     });
 
     if (!post) throw new Error("Post introuvable.");
@@ -50,16 +51,10 @@ export const getPostById: QueryResolvers["getPostById"] = async (
     if (!author) throw new Error(`Auteur introuvable pour le post ${post.id}`);
 
     return {
-      ...post,
-      author: {
-        ...author,
-        posts: dataSources.db.post.findMany({ where: { authorId: author.id } }),
-        likedPosts: [],
-        comments: dataSources.db.comment.findMany({
-          where: { authorId: author.id },
-        }),
-        likedComments: [],
-      },
+      code: 201,
+      success: true,
+      message: "Ok cool",
+      post: post,
     };
   } catch (error) {
     throw new Error(

@@ -2,19 +2,25 @@ import { Resolvers } from "./types.js";
 import { hashPassword } from "./modules/auth.js";
 import { signIn } from "./resolvers/mutations/signIn.js";
 import { DataSourceContext } from "./context.js";
-import { getPosts } from "./resolvers/querys/postQuerry.js";
+import { getPostById, getPosts } from "./resolvers/querys/postQuerry.js";
 import {
-  getUser,
+  getUsers,
   getUserById,
   getUserByName,
 } from "./resolvers/querys/userQuery.js";
+import {
+  createPost,
+  deletePost,
+  updatePost,
+} from "./resolvers/mutations/postMutation.js";
 
 export const resolvers: Resolvers = {
   Query: {
-    getUser,
+    getUsers,
     getUserByName,
     getUserById,
     getPosts,
+    getPostById,
   },
 
   Mutation: {
@@ -50,5 +56,17 @@ export const resolvers: Resolvers = {
       }
     },
     signIn,
+    createPost,
+    deletePost,
+    updatePost,
+  },
+
+  User: {
+    posts: (parent, _, { dataSources }) => {
+      return dataSources.db.post.findMany({
+        where: { id: parent.id },
+        include: { author: true },
+      });
+    },
   },
 };
