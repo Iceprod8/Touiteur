@@ -1,28 +1,13 @@
-import { Resolvers, Speciality } from "./types.js";
+import { Resolvers } from "./types.js";
 import { hashPassword } from "./modules/auth.js";
 import { signIn } from "./resolvers/mutations/signIn.js";
-
-const doctorsData = [
-  {
-    name: "Samia Mekame",
-    speciality: Speciality.Ophtalmologist,
-  },
-  {
-    name: "Catherine Bedoy",
-    speciality: Speciality.Ophtalmologist,
-  },
-];
+import { DataSourceContext } from "./context.js";
+import { getPosts } from "./resolvers/query/PostQuerry.js";
 
 export const resolvers: Resolvers = {
   Query: {
-    doctors: (_, { specialities }) => {
-      return specialities
-        ? doctorsData.filter((doctor) =>
-            specialities.includes(doctor.speciality)
-          )
-        : doctorsData;
-    },
-    getUser: async (_, __, context) => {
+    getPosts,
+    getUsers: async (_, __, context) => {
       const user = await context.dataSources.db.user.findMany();
       return user;
     },
@@ -56,40 +41,16 @@ export const resolvers: Resolvers = {
         };
       }
     },
-    getUserById: async (_, { id }, context) => {
-      try {
-        const user = await context.dataSources.db.user.findUnique({
-          where: { id },
-        });
-        if (!user) {
-          return {
-            code: 400,
-            message: "Utilisateur introuvable",
-            success: false,
-            id: null,
-          };
-        }
-
-        return {
-          code: 201,
-          message: "Utilisateur trouvé",
-          success: true,
-          user: user,
-        };
-      } catch (error) {
-        return {
-          code: 500,
-          message: "Une erreur est survenue",
-          success: false,
-          id: null,
-        };
-      }
-    },
   },
+
   Mutation: {
-    createUser: async (_, { username, password }, context) => {
+    createUser: async (
+      _,
+      { username, password },
+      { dataSources }: DataSourceContext
+    ) => {
       try {
-        const createdUser = await context.dataSources.db.user.create({
+        const createdUser = await dataSources.db.user.create({
           data: {
             username,
             password: await hashPassword(password),
