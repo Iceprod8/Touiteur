@@ -5,5 +5,5 @@ export type DataSourceContext = {
   dataSources: {
     db: PrismaClient;
   };
-  user: AuthenticatedUser;
+  user: AuthenticatedUser | null;
 };
