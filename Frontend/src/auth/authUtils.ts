@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-
 export const saveAuthToken = (token: string) => {
   sessionStorage.setItem('auth-token', token);
 };
