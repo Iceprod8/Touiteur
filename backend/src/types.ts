@@ -31,6 +31,22 @@ export type Doctor = {
   speciality?: Maybe<Speciality>;
 };
 
+export type GetUserByIdResponse = {
+  __typename?: 'GetUserByIdResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+  user?: Maybe<User>;
+};
+
+export type GetUserByNameResponse = {
+  __typename?: 'GetUserByNameResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+  username?: Maybe<Scalars['String']['output']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createUser?: Maybe<CreateUserResponse>;
@@ -52,11 +68,24 @@ export type MutationSignInArgs = {
 export type Query = {
   __typename?: 'Query';
   doctors: Array<Doctor>;
+  getUser: Array<Maybe<User>>;
+  getUserById?: Maybe<GetUserByIdResponse>;
+  getUserByName?: Maybe<GetUserByNameResponse>;
 };
 
 
 export type QueryDoctorsArgs = {
   specialities?: InputMaybe<Array<Speciality>>;
+};
+
+
+export type QueryGetUserByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetUserByNameArgs = {
+  username: Scalars['String']['input'];
 };
 
 export type SignInUserResponse = {
@@ -152,6 +181,8 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreateUserResponse: ResolverTypeWrapper<CreateUserResponse>;
   Doctor: ResolverTypeWrapper<Doctor>;
+  GetUserByIdResponse: ResolverTypeWrapper<GetUserByIdResponse>;
+  GetUserByNameResponse: ResolverTypeWrapper<GetUserByNameResponse>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -167,6 +198,8 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   CreateUserResponse: CreateUserResponse;
   Doctor: Doctor;
+  GetUserByIdResponse: GetUserByIdResponse;
+  GetUserByNameResponse: GetUserByNameResponse;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: {};
@@ -190,6 +223,22 @@ export type DoctorResolvers<ContextType = DataSourceContext, ParentType extends 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GetUserByIdResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['GetUserByIdResponse'] = ResolversParentTypes['GetUserByIdResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GetUserByNameResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['GetUserByNameResponse'] = ResolversParentTypes['GetUserByNameResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createUser?: Resolver<Maybe<ResolversTypes['CreateUserResponse']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
   signIn?: Resolver<Maybe<ResolversTypes['SignInUserResponse']>, ParentType, ContextType, RequireFields<MutationSignInArgs, 'password' | 'username'>>;
@@ -197,6 +246,9 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   doctors?: Resolver<Array<ResolversTypes['Doctor']>, ParentType, ContextType, Partial<QueryDoctorsArgs>>;
+  getUser?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>;
+  getUserById?: Resolver<Maybe<ResolversTypes['GetUserByIdResponse']>, ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, 'id'>>;
+  getUserByName?: Resolver<Maybe<ResolversTypes['GetUserByNameResponse']>, ParentType, ContextType, RequireFields<QueryGetUserByNameArgs, 'username'>>;
 };
 
 export type SignInUserResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['SignInUserResponse'] = ResolversParentTypes['SignInUserResponse']> = {
@@ -216,6 +268,8 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
 export type Resolvers<ContextType = DataSourceContext> = {
   CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
   Doctor?: DoctorResolvers<ContextType>;
+  GetUserByIdResponse?: GetUserByIdResponseResolvers<ContextType>;
+  GetUserByNameResponse?: GetUserByNameResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SignInUserResponse?: SignInUserResponseResolvers<ContextType>;
