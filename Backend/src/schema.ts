@@ -29,7 +29,7 @@ export const typeDefs = gql`
     code: Int!
     success: Boolean!
     message: String!
-    username: String
+    user: User
   }
 
   type CreateUserResponse {

@@ -25,7 +25,7 @@ export const getUserByName: QueryResolvers["getUserByName"] = async (
         code: 400,
         message: "Utilisateur introuvable",
         success: false,
-        username: null,
+        user: user,
       };
     }
 
@@ -33,14 +33,14 @@ export const getUserByName: QueryResolvers["getUserByName"] = async (
       code: 201,
       message: "Utilisateur trouvé",
       success: true,
-      username: user.username,
+      user: user,
     };
   } catch (error) {
     return {
       code: 500,
       message: "Une erreur est survenue",
       success: false,
-      username: null,
+      user: null,
     };
   }
 };
