@@ -14,13 +14,14 @@ function NavbarComponent({ isLoggedIn, username, onLogout }: NavbarProps) {
   const location = useLocation();
 
   return (
-    <Navbar sticky='top' bg="dark" variant="dark">
+    <Navbar fixed='top' bg="dark" variant="dark" className='navbar'>
       <Container>
         <Navbar.Brand as={Link} to="/">Touiteur</Navbar.Brand>
         <Nav className="me-auto">
           <Nav.Link as={Link} to="/" active={location.pathname === "/"}>Tous les posts</Nav.Link>
-          <Nav.Link as={Link} to="/features" active={location.pathname === "/features"}>Populaires</Nav.Link>
-          <Nav.Link as={Link} to="/pricing" active={location.pathname === "/pricing"}>Récents</Nav.Link>
+          <Nav.Link as={Link} to="/popular" active={location.pathname === "/popular"}>Populaires</Nav.Link>
+          <Nav.Link as={Link} to="/recent" active={location.pathname === "/recent"}>Récents</Nav.Link>
+          <Nav.Link as={Link} to="/search" active={location.pathname === "/search"}>Recherche</Nav.Link>
         </Nav>
 
         {/* Affichage dynamique selon l'état de connexion */}
@@ -30,7 +31,7 @@ function NavbarComponent({ isLoggedIn, username, onLogout }: NavbarProps) {
             <Button variant="outline-light" onClick={onLogout}>Logout</Button>
           </>
         ) : (
-          <Button variant="outline-light">Login</Button>
+          <Button variant="outline-light" as={Link} to="/login">Login</Button>
         )}
         
       </Container>

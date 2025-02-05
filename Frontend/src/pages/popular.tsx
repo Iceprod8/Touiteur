@@ -6,28 +6,29 @@ import { Card, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css'
 
-// const GET_CHARACTERS = graphql(`#gql
-const GET_CHARACTERS = gql`
-query characters($page: Int){
-  characters(page: $page) {
-      info {
-      pages
-    }
-    results {
-      id
-      name
-      status
-      gender
-      image
-    }
-  }
-}
-`;
+function PopularComponent() {
 
-function AllCardsComponents() {
+  // const GET_CHARACTERS = graphql(`#gql
+    const GET_POPULAR = gql`
+    query characters($page: Int){
+    characters(page: $page) {
+        info {
+        pages
+        }
+        results {
+        id
+        name
+        status
+        gender
+        image
+        }
+    }
+    }
+    `;
+
   const [page, setPage] = useState(1);
 
-  const { loading, error, data } = useQuery(GET_CHARACTERS, {
+  const { loading, error, data } = useQuery(GET_POPULAR, {
     variables: { page }
   });
 
@@ -83,5 +84,5 @@ function AllCardsComponents() {
 
   );
 }
-
-export default AllCardsComponents
+  
+  export default PopularComponent
