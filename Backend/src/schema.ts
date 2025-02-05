@@ -1,9 +1,6 @@
 import gql from "graphql-tag";
 
 export const typeDefs = gql`
-  type Query {
-  }
-
   type Mutation {
     createUser(username: String!, password: String!): CreateUserResponse
   }
@@ -12,7 +9,7 @@ export const typeDefs = gql`
     id: ID!
     username: String!
   }
- 
+
   type CreateUserResponse {
     code: Int!
     success: Boolean!

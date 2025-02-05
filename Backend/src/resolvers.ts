@@ -2,7 +2,6 @@ import { Resolvers } from "./types.js";
 import { hashPassword } from "./modules/auth.js";
 
 export const resolvers: Resolvers = {
-  Query: {},
   Mutation: {
     createUser: async (_, { username, password }, context) => {
       try {
