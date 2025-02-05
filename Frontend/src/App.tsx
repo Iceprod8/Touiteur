@@ -1,17 +1,18 @@
 import { ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import NavbarComponent from './navbar';
 import AllCardsComponents from './pages/allCards';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from './pages/Login';
-import Register from './pages/Register';
+import PopularComponent from './pages/popular';
+import RecentComponent from './pages/recent';
+import LoginComponent from './pages/login';
+import SearchComponent from './pages/search';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql', 
-  //uri: 'https://rickandmortyapi.com/graphql',
+  uri: 'http://localhost:4000/graphql',
+  // uri: 'https://rickandmortyapi.com/graphql',
   cache: new InMemoryCache(),
 });
 
@@ -24,21 +25,19 @@ function App() {
 
   const [page, setPage] = useState(1);
 
-
   return (
     <div>
-         <Router>
-      <NavbarComponent isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} />
-      <Routes>
-        <Route path="/" element={<AllCardsComponents />} />
-        <Route path="/features"/>
-        <Route path="/pricing"/>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/register" element={<Register/>}/>
-      </Routes>
-    </Router>
+      <Router>
+        <NavbarComponent isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} />
+        <Routes>
+          <Route path="/" element={<AllCardsComponents />}/>
+          <Route path="/popular" element={<PopularComponent />}/>
+          <Route path="/recent" element={<RecentComponent />}/>
+          <Route path="/login" element={<LoginComponent />}/>
+          <Route path="/search" element={<SearchComponent />}/>
+        </Routes>
+      </Router>
     </div>
-
   );
 }
 

@@ -1,7 +1,12 @@
 #root {
-  width: 100%;
-  height: 100%;
+  max-width: 1280px;
   margin: 0 auto;
+  text-align: center;
+}
+ 
+.className{
+  height: 56;
+margin: 56
 }
 
 .pagination{

@@ -19,34 +19,34 @@ const LoginComponent = () => {
     const [error, setError] = useState<string | null>(null);
     const [login, { loading }] = useMutation(LOGIN_MUTATION, {
         onCompleted: (data) => {
-          
-          const token = data.login.token;
-          
-          sessionStorage.setItem("auth-token", token);
-    
+
+            const token = data.login.token;
+
+            sessionStorage.setItem("auth-token", token);
+
         },
         onError: (err) => {
             setError("Login didn't work: " + err.message);
         }
-      });
+    });
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!username || !password) {
-          setError("Missing data");
-          return;
+            setError("Missing data");
+            return;
         }
         login({ variables: { username, password } });
-      };
+    };
 
 
-    return(
+    return (
         <div>
-             <Container className="d-flex justify-content-center align-items-center min-vh-100">
+            <Container className="d-flex justify-content-center align-items-center min-vh-100">
                 <Row className="w-100">
                     <Col xs={12} md={12} lg={12} className="custom-container">
-                    <div className="">
-                        <h2 className="text-center mb-5">Register</h2>
+                        <div className="">
+                            <h2 className="text-center mb-5">Login</h2>
                             <Form onSubmit={handleLogin} className="flex flex-col">
                                 <InputGroup className="mb-3">
                                     <Form.Control
@@ -76,4 +76,4 @@ const LoginComponent = () => {
     )
 }
 
-    export default LoginComponent
+export default LoginComponent
