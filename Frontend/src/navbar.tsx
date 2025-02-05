@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 interface NavbarProps {
   isLoggedIn: boolean;
   username?: string;
-  onLogout: () => void;
+  onLogout: () => void ;
 }
 
 function NavbarComponent({ isLoggedIn, username, onLogout }: NavbarProps) {
