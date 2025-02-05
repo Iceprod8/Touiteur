@@ -4,6 +4,8 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Col, Container, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { saveAuthToken } from "../auth/authUtils";
 
 const LOGIN_MUTATION = gql`
   mutation Login($username: String!, $password: String!) {
@@ -22,7 +24,7 @@ const LoginComponent = () => {
 
             const token = data.login.token;
 
-            sessionStorage.setItem("auth-token", token);
+            saveAuthToken(token);
 
         },
         onError: (err) => {
@@ -42,10 +44,10 @@ const LoginComponent = () => {
 
     return (
         <div>
-            <Container className="d-flex justify-content-center align-items-center min-vh-100">
+            <Container className="justify-content-center align-items-center w-25">
                 <Row className="w-100">
                     <Col xs={12} md={12} lg={12} className="custom-container">
-                        <div className="">
+                        <div>
                             <h2 className="text-center mb-5">Login</h2>
                             <Form onSubmit={handleLogin} className="flex flex-col">
                                 <InputGroup className="mb-3">
@@ -68,6 +70,11 @@ const LoginComponent = () => {
                                     {loading ? "Loading..." : "Connect"}
                                 </Button>
                             </Form>
+                        </div>
+                        <div className="mt-3">
+                        <Link to="/register" className="custom-link">
+                            <p>To register</p>
+                        </Link>
                         </div>
                     </Col>
                 </Row>

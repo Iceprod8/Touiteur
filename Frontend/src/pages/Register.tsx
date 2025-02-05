@@ -42,14 +42,14 @@ const RegisterComponent = () => {
           };
 
     return (
-        <div>
-            <Container className="d-flex justify-content-center align-items-center min-vh-100">
+        
+            <Container className="justify-content-center align-items-center w-25">
                 <Row className="w-100">
                     <Col xs={12} md={12} lg={12} className="custom-container">
-                    <div className="">
+                    <div>
                         <h2 className="text-center mb-5">Register</h2>
                             <Form onSubmit={handleRegister} className="flex flex-col">
-                                <InputGroup className="mb-3">
+                                <InputGroup className="mb-3 ">
                                     <Form.Control
                                         type="username"
                                         placeholder="username"
@@ -81,7 +81,7 @@ const RegisterComponent = () => {
                     </Col>
                 </Row>
             </Container>
-        </div>
+        
     )
 }
 
