@@ -3,6 +3,9 @@ import gql from "graphql-tag";
 export const typeDefs = gql`
   type Query {
     doctors(specialities: [Speciality!]): [Doctor!]!
+    getUser: [User]!
+    getUserById(id: String!): GetUserByIdResponse
+    getUserByName(username: String!): GetUserByNameResponse
   }
 
   type Mutation {
@@ -13,6 +16,20 @@ export const typeDefs = gql`
   type User {
     id: ID!
     username: String!
+  }
+
+  type GetUserByIdResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    user: User
+  }
+
+  type GetUserByNameResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    username: String
   }
 
   type CreateUserResponse {
