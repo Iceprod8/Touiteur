@@ -3,8 +3,8 @@ import gql from "graphql-tag";
 export const typeDefs = gql`
   type Query {
     getUsers: [User]!
-    getUserById(id: ID!): CRUserResponse
-    getUserByName(username: String!): CRUserResponse
+    getUserById(id: ID!): RUUserResponse
+    getUserByName(username: String!): RUUserResponse
 
     getPosts: CRUDPostsResponse
     getPostById(id: ID!): CRUDPostResponse
@@ -17,9 +17,9 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    createUser(username: String!, password: String!): CRUserResponse
-    updateUser(username: String!, password: String!): CRUserResponse
-    signIn(username: String!, password: String!): SignInUserResponse
+    createUser(username: String!, password: String!): AuthUserResponse
+    updateUser(username: String!, password: String!): RUUserResponse
+    signIn(username: String!, password: String!): AuthUserResponse
 
     createPost(content: String!, authorId: ID!): CRUDPostResponse
     deletePost(id: ID!): CRUDPostResponse
@@ -62,17 +62,18 @@ export const typeDefs = gql`
     likedBy: [User!]
   }
 
-  type CRUserResponse {
+  type RUUserResponse {
     code: Int!
     success: Boolean!
     message: String!
     user: User
   }
 
-  type SignInUserResponse {
+  type AuthUserResponse {
     code: Int!
     success: Boolean!
     message: String!
+    user: User
     token: String
   }
 

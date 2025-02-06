@@ -51,7 +51,7 @@ export const createUser: MutationResolvers["createUser"] = async (
         password: await hashPassword(password),
       },
     });
-
+    const token = createJWT(createdUser);
     return {
       code: 201,
       message: `User ${username} has been created`,
@@ -60,6 +60,7 @@ export const createUser: MutationResolvers["createUser"] = async (
         id: createdUser.id,
         username: createdUser.username,
       },
+      token,
     };
   } catch {
     return {
@@ -67,6 +68,7 @@ export const createUser: MutationResolvers["createUser"] = async (
       message: "Something bad happened",
       success: false,
       user: null,
+      token: null,
     };
   }
 };
