@@ -24,7 +24,7 @@ export const typeDefs = gql`
     updateUser(username: String!, password: String!): RUUserResponse
     signIn(username: String!, password: String!): AuthUserResponse
 
-    createPost(content: String!, authorId: ID!): CRUDPostResponse
+    createPost(content: String!): CRUDPostResponse
     deletePost(id: ID!): CRUDPostResponse
     updatePost(id: ID!, content: String!): CRUDPostResponse
 

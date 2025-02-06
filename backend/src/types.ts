@@ -104,7 +104,6 @@ export type MutationCreateCommentArgs = {
 
 
 export type MutationCreatePostArgs = {
-  authorId: Scalars['ID']['input'];
   content: Scalars['String']['input'];
 };
 
@@ -425,7 +424,7 @@ export type GetLikesResponseResolvers<ContextType = DataSourceContext, ParentTyp
 
 export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createComment?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'authorId' | 'content' | 'postId'>>;
-  createPost?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'authorId' | 'content'>>;
+  createPost?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'content'>>;
   createUser?: Resolver<Maybe<ResolversTypes['AuthUserResponse']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
   deleteComment?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<MutationDeleteCommentArgs, 'id'>>;
   deletePost?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, 'id'>>;
