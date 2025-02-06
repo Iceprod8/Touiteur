@@ -9,6 +9,8 @@ import PopularComponent from './pages/popular';
 import RecentComponent from './pages/recent';
 import LoginComponent from './pages/login';
 import SearchComponent from './pages/search';
+import PostComponent from './pages/post'
+import ProfileComponent from './pages/Profile';
 import RegisterComponent from './pages/register';
 import { getAuthToken, logout } from './auth/authUtils';
 
@@ -27,7 +29,6 @@ const authLink = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
@@ -35,7 +36,8 @@ const client = new ApolloClient({
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState("JohnDoe");
+
+  const [username, setUsername] = useState("clem");
   const navigate = useNavigate();
 
   const handleLogin = () => setIsLoggedIn(true);
@@ -44,8 +46,6 @@ function App() {
     setIsLoggedIn(false);
     navigate('/login');
   };
-
-  const [page, setPage] = useState(1);
 
   return (
     <div>
@@ -56,6 +56,8 @@ function App() {
           <Route path="/recent" element={<RecentComponent />}/>
           <Route path="/login" element={<LoginComponent />}/>
           <Route path="/search" element={<SearchComponent />}/>
+          <Route path="/profile" element={<ProfileComponent />}/>
+          <Route path="/post/:id" element={<PostComponent />} />
           <Route path="/register" element={<RegisterComponent />}/>
         </Routes>
     </div>

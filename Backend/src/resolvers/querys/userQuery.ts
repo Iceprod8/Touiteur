@@ -1,7 +1,7 @@
 import { DataSourceContext } from "../../context";
 import { QueryResolvers } from "../../types";
 
-export const getUser: QueryResolvers["getUser"] = async (
+export const getUsers: QueryResolvers["getUsers"] = async (
   _,
   __,
   { dataSources }: DataSourceContext

@@ -4,13 +4,13 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 
-interface NavbarProps {
+interface NavbarInterface {
   isLoggedIn: boolean;
   username?: string;
   onLogout: () => void ;
 }
 
-function NavbarComponent({ isLoggedIn, username, onLogout }: NavbarProps) {
+function NavbarComponent({ isLoggedIn, username, onLogout }: NavbarInterface) {
   const location = useLocation();
 
   return (
@@ -22,9 +22,9 @@ function NavbarComponent({ isLoggedIn, username, onLogout }: NavbarProps) {
           <Nav.Link as={Link} to="/popular" active={location.pathname === "/popular"}>Populaires</Nav.Link>
           <Nav.Link as={Link} to="/recent" active={location.pathname === "/recent"}>Récents</Nav.Link>
           <Nav.Link as={Link} to="/search" active={location.pathname === "/search"}>Recherche</Nav.Link>
+          <Nav.Link as={Link} to="/profile" active={location.pathname === "/profile"}>Profile</Nav.Link>
         </Nav>
 
-        {/* Affichage dynamique selon l'état de connexion */}
         {isLoggedIn ? (
           <>
             <span style={{ color: "white", marginRight: "10px" }}>👤 {username}</span>

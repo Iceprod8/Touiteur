@@ -1,0 +1,105 @@
+# 📜 Query : Récupérer tous les posts avec leurs auteurs
+query GetPosts {
+    getPosts {
+    code
+    success
+    message
+    posts {
+      content
+      author {
+        username
+      }
+      comments {
+        content
+        author {
+          username
+        }
+      }
+    }
+
+  }
+}
+
+# 📜 Query : Récupérer un post grace a son id
+query GetPostsById($id: ID!) {
+  getPostsUser(id: $id) {
+    code
+    message
+    success
+    posts {
+      content
+      author {
+        username
+      }
+      comments {
+        content
+        author {
+          username
+        }
+      }
+    }
+  }
+}
+
+# 📜 Query : Récupérer les posts d'un utilisateur spécifique
+query GetPostsUser($userId: ID!) {
+  getPostsUser(userId: $userId) {
+    code
+    message
+    success
+    posts {
+      content
+      comments {
+        content
+        author {
+          username
+        }
+      }
+    }
+  }
+}
+
+# 🚀 Mutation : Création d'un post
+mutation CreatePost($content: String!, $authorId: ID!) {
+  createPost(content: $content, authorId: $authorId) {
+    code
+    success
+    message
+    post {
+      content
+      author {
+        username
+      }
+    }
+  }
+}
+
+# 🚀 Mutation : Mise à jour d'un post
+mutation UpdatePost($id: ID!, $content: String!) {
+  updatePost(id: $id, content: $content) {
+    code
+    success
+    message
+    post {
+      content
+      author {
+        username
+      }
+    }
+  }
+}
+
+# 🚀 Mutation : Suppression d'un post
+mutation DeletePost($id: ID!) {
+  deletePost(id: $id) {
+    code
+    success
+    message
+    post {
+      content
+      author {
+        username
+      }
+    }
+  }
+}
