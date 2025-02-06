@@ -17,104 +17,67 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type CrudCommentResponse = {
+  __typename?: 'CRUDCommentResponse';
+  code: Scalars['Int']['output'];
+  comment?: Maybe<Comment>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+export type CrudCommentsResponse = {
+  __typename?: 'CRUDCommentsResponse';
+  code: Scalars['Int']['output'];
+  comments: Array<Maybe<Comment>>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+export type CrudPostResponse = {
+  __typename?: 'CRUDPostResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  post?: Maybe<Post>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type CrudPostsResponse = {
+  __typename?: 'CRUDPostsResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  posts: Array<Maybe<Post>>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type CrUserResponse = {
+  __typename?: 'CRUserResponse';
+  code: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+  user?: Maybe<User>;
+};
+
 export type Comment = {
   __typename?: 'Comment';
   author: User;
+  authorId: Scalars['ID']['output'];
   content: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  likedBy: Array<User>;
+  likedBy?: Maybe<Array<User>>;
   post: Post;
-};
-
-export type CreateCommentResponse = {
-  __typename?: 'CreateCommentResponse';
-  code: Scalars['Int']['output'];
-  comment?: Maybe<Comment>;
-  message: Scalars['String']['output'];
-  success: Scalars['Boolean']['output'];
-};
-
-export type CreatePostResponse = {
-  __typename?: 'CreatePostResponse';
-  code: Scalars['Int']['output'];
-  message: Scalars['String']['output'];
-  post?: Maybe<Post>;
-  success: Scalars['Boolean']['output'];
-};
-
-export type CreateUserResponse = {
-  __typename?: 'CreateUserResponse';
-  code: Scalars['Int']['output'];
-  message: Scalars['String']['output'];
-  success: Scalars['Boolean']['output'];
-  user?: Maybe<User>;
-};
-
-export type DeleteCommentResponse = {
-  __typename?: 'DeleteCommentResponse';
-  code: Scalars['Int']['output'];
-  message: Scalars['String']['output'];
-  success: Scalars['Boolean']['output'];
-};
-
-export type DeletePostResponse = {
-  __typename?: 'DeletePostResponse';
-  code: Scalars['Int']['output'];
-  message: Scalars['String']['output'];
-  success: Scalars['Boolean']['output'];
-};
-
-export type GetPostByIdResponse = {
-  __typename?: 'GetPostByIdResponse';
-  code: Scalars['Int']['output'];
-  message: Scalars['String']['output'];
-  post?: Maybe<Post>;
-  success: Scalars['Boolean']['output'];
-};
-
-export type GetUserByIdResponse = {
-  __typename?: 'GetUserByIdResponse';
-  code: Scalars['Int']['output'];
-  message: Scalars['String']['output'];
-  success: Scalars['Boolean']['output'];
-  user?: Maybe<User>;
-};
-
-export type GetUserByNameResponse = {
-  __typename?: 'GetUserByNameResponse';
-  code: Scalars['Int']['output'];
-  message: Scalars['String']['output'];
-  success: Scalars['Boolean']['output'];
-  user?: Maybe<User>;
-};
-
-export type LikeCommentResponse = {
-  __typename?: 'LikeCommentResponse';
-  code: Scalars['Int']['output'];
-  comment?: Maybe<Comment>;
-  message: Scalars['String']['output'];
-  success: Scalars['Boolean']['output'];
-};
-
-export type LikePostResponse = {
-  __typename?: 'LikePostResponse';
-  code: Scalars['Int']['output'];
-  message: Scalars['String']['output'];
-  post?: Maybe<Post>;
-  success: Scalars['Boolean']['output'];
+  postId: Scalars['ID']['output'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createComment?: Maybe<CreateCommentResponse>;
-  createPost?: Maybe<CreatePostResponse>;
-  createUser?: Maybe<CreateUserResponse>;
-  deleteComment?: Maybe<DeleteCommentResponse>;
-  deletePost?: Maybe<DeletePostResponse>;
-  likeComment?: Maybe<LikeCommentResponse>;
-  likePost?: Maybe<LikePostResponse>;
+  createComment?: Maybe<CrudCommentResponse>;
+  createPost?: Maybe<CrudPostResponse>;
+  createUser?: Maybe<CrUserResponse>;
+  deleteComment?: Maybe<CrudCommentResponse>;
+  deletePost?: Maybe<CrudPostResponse>;
   signIn?: Maybe<SignInUserResponse>;
-  updatePost?: Maybe<UpdatePostResponse>;
+  updateComment?: Maybe<CrudCommentResponse>;
+  updatePost?: Maybe<CrudPostResponse>;
 };
 
 
@@ -147,21 +110,15 @@ export type MutationDeletePostArgs = {
 };
 
 
-export type MutationLikeCommentArgs = {
-  commentId: Scalars['ID']['input'];
-  userId: Scalars['ID']['input'];
-};
-
-
-export type MutationLikePostArgs = {
-  postId: Scalars['ID']['input'];
-  userId: Scalars['ID']['input'];
-};
-
-
 export type MutationSignInArgs = {
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateCommentArgs = {
+  content: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
 };
 
 
@@ -174,30 +131,49 @@ export type Post = {
   __typename?: 'Post';
   author: User;
   authorId: Scalars['ID']['output'];
-  comments: Array<Comment>;
+  comments?: Maybe<Array<Comment>>;
   content: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  likedBy: Array<User>;
+  likedBy?: Maybe<Array<User>>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  getCommentsByPostId: Array<Comment>;
-  getPostById?: Maybe<GetPostByIdResponse>;
-  getPosts: Array<Maybe<Post>>;
-  getUserById?: Maybe<GetUserByIdResponse>;
-  getUserByName?: Maybe<GetUserByNameResponse>;
+  getCommentById?: Maybe<CrudCommentResponse>;
+  getComments?: Maybe<CrudCommentsResponse>;
+  getCommentsPost?: Maybe<CrudCommentResponse>;
+  getCommentsUser?: Maybe<CrudCommentResponse>;
+  getPostById?: Maybe<CrudPostResponse>;
+  getPosts?: Maybe<CrudPostsResponse>;
+  getPostsUser?: Maybe<CrudPostsResponse>;
+  getUserById?: Maybe<CrUserResponse>;
+  getUserByName?: Maybe<CrUserResponse>;
   getUsers: Array<Maybe<User>>;
 };
 
 
-export type QueryGetCommentsByPostIdArgs = {
+export type QueryGetCommentByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryGetCommentsPostArgs = {
   postId: Scalars['ID']['input'];
+};
+
+
+export type QueryGetCommentsUserArgs = {
+  userId: Scalars['ID']['input'];
 };
 
 
 export type QueryGetPostByIdArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryGetPostsUserArgs = {
+  userId: Scalars['ID']['input'];
 };
 
 
@@ -218,21 +194,13 @@ export type SignInUserResponse = {
   token?: Maybe<Scalars['String']['output']>;
 };
 
-export type UpdatePostResponse = {
-  __typename?: 'UpdatePostResponse';
-  code: Scalars['Int']['output'];
-  message: Scalars['String']['output'];
-  post?: Maybe<Post>;
-  success: Scalars['Boolean']['output'];
-};
-
 export type User = {
   __typename?: 'User';
-  comments: Array<Comment>;
+  comments?: Maybe<Array<Comment>>;
   id: Scalars['ID']['output'];
-  likedComments: Array<Comment>;
-  likedPosts: Array<Post>;
-  posts: Array<Post>;
+  likedComments?: Maybe<Array<Comment>>;
+  likedPosts?: Maybe<Array<Post>>;
+  posts?: Maybe<Array<Post>>;
   username: Scalars['String']['output'];
 };
 
@@ -308,168 +276,123 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CRUDCommentResponse: ResolverTypeWrapper<CrudCommentResponse>;
+  CRUDCommentsResponse: ResolverTypeWrapper<CrudCommentsResponse>;
+  CRUDPostResponse: ResolverTypeWrapper<CrudPostResponse>;
+  CRUDPostsResponse: ResolverTypeWrapper<CrudPostsResponse>;
+  CRUserResponse: ResolverTypeWrapper<CrUserResponse>;
   Comment: ResolverTypeWrapper<Comment>;
-  CreateCommentResponse: ResolverTypeWrapper<CreateCommentResponse>;
-  CreatePostResponse: ResolverTypeWrapper<CreatePostResponse>;
-  CreateUserResponse: ResolverTypeWrapper<CreateUserResponse>;
-  DeleteCommentResponse: ResolverTypeWrapper<DeleteCommentResponse>;
-  DeletePostResponse: ResolverTypeWrapper<DeletePostResponse>;
-  GetPostByIdResponse: ResolverTypeWrapper<GetPostByIdResponse>;
-  GetUserByIdResponse: ResolverTypeWrapper<GetUserByIdResponse>;
-  GetUserByNameResponse: ResolverTypeWrapper<GetUserByNameResponse>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
-  LikeCommentResponse: ResolverTypeWrapper<LikeCommentResponse>;
-  LikePostResponse: ResolverTypeWrapper<LikePostResponse>;
   Mutation: ResolverTypeWrapper<{}>;
   Post: ResolverTypeWrapper<Post>;
   Query: ResolverTypeWrapper<{}>;
   SignInUserResponse: ResolverTypeWrapper<SignInUserResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
-  UpdatePostResponse: ResolverTypeWrapper<UpdatePostResponse>;
   User: ResolverTypeWrapper<User>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
+  CRUDCommentResponse: CrudCommentResponse;
+  CRUDCommentsResponse: CrudCommentsResponse;
+  CRUDPostResponse: CrudPostResponse;
+  CRUDPostsResponse: CrudPostsResponse;
+  CRUserResponse: CrUserResponse;
   Comment: Comment;
-  CreateCommentResponse: CreateCommentResponse;
-  CreatePostResponse: CreatePostResponse;
-  CreateUserResponse: CreateUserResponse;
-  DeleteCommentResponse: DeleteCommentResponse;
-  DeletePostResponse: DeletePostResponse;
-  GetPostByIdResponse: GetPostByIdResponse;
-  GetUserByIdResponse: GetUserByIdResponse;
-  GetUserByNameResponse: GetUserByNameResponse;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
-  LikeCommentResponse: LikeCommentResponse;
-  LikePostResponse: LikePostResponse;
   Mutation: {};
   Post: Post;
   Query: {};
   SignInUserResponse: SignInUserResponse;
   String: Scalars['String']['output'];
-  UpdatePostResponse: UpdatePostResponse;
   User: User;
+};
+
+export type CrudCommentResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['CRUDCommentResponse'] = ResolversParentTypes['CRUDCommentResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  comment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CrudCommentsResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['CRUDCommentsResponse'] = ResolversParentTypes['CRUDCommentsResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  comments?: Resolver<Array<Maybe<ResolversTypes['Comment']>>, ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CrudPostResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['CRUDPostResponse'] = ResolversParentTypes['CRUDPostResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CrudPostsResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['CRUDPostsResponse'] = ResolversParentTypes['CRUDPostsResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  posts?: Resolver<Array<Maybe<ResolversTypes['Post']>>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CrUserResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['CRUserResponse'] = ResolversParentTypes['CRUserResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CommentResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = {
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  authorId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  likedBy?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  likedBy?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
   post?: Resolver<ResolversTypes['Post'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CreateCommentResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['CreateCommentResponse'] = ResolversParentTypes['CreateCommentResponse']> = {
-  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  comment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CreatePostResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['CreatePostResponse'] = ResolversParentTypes['CreatePostResponse']> = {
-  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CreateUserResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['CreateUserResponse'] = ResolversParentTypes['CreateUserResponse']> = {
-  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DeleteCommentResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['DeleteCommentResponse'] = ResolversParentTypes['DeleteCommentResponse']> = {
-  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DeletePostResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['DeletePostResponse'] = ResolversParentTypes['DeletePostResponse']> = {
-  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type GetPostByIdResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['GetPostByIdResponse'] = ResolversParentTypes['GetPostByIdResponse']> = {
-  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type GetUserByIdResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['GetUserByIdResponse'] = ResolversParentTypes['GetUserByIdResponse']> = {
-  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type GetUserByNameResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['GetUserByNameResponse'] = ResolversParentTypes['GetUserByNameResponse']> = {
-  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type LikeCommentResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['LikeCommentResponse'] = ResolversParentTypes['LikeCommentResponse']> = {
-  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  comment?: Resolver<Maybe<ResolversTypes['Comment']>, ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type LikePostResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['LikePostResponse'] = ResolversParentTypes['LikePostResponse']> = {
-  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  postId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createComment?: Resolver<Maybe<ResolversTypes['CreateCommentResponse']>, ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'authorId' | 'content' | 'postId'>>;
-  createPost?: Resolver<Maybe<ResolversTypes['CreatePostResponse']>, ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'authorId' | 'content'>>;
-  createUser?: Resolver<Maybe<ResolversTypes['CreateUserResponse']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
-  deleteComment?: Resolver<Maybe<ResolversTypes['DeleteCommentResponse']>, ParentType, ContextType, RequireFields<MutationDeleteCommentArgs, 'id'>>;
-  deletePost?: Resolver<Maybe<ResolversTypes['DeletePostResponse']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, 'id'>>;
-  likeComment?: Resolver<Maybe<ResolversTypes['LikeCommentResponse']>, ParentType, ContextType, RequireFields<MutationLikeCommentArgs, 'commentId' | 'userId'>>;
-  likePost?: Resolver<Maybe<ResolversTypes['LikePostResponse']>, ParentType, ContextType, RequireFields<MutationLikePostArgs, 'postId' | 'userId'>>;
+  createComment?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'authorId' | 'content' | 'postId'>>;
+  createPost?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<MutationCreatePostArgs, 'authorId' | 'content'>>;
+  createUser?: Resolver<Maybe<ResolversTypes['CRUserResponse']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
+  deleteComment?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<MutationDeleteCommentArgs, 'id'>>;
+  deletePost?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, 'id'>>;
   signIn?: Resolver<Maybe<ResolversTypes['SignInUserResponse']>, ParentType, ContextType, RequireFields<MutationSignInArgs, 'password' | 'username'>>;
-  updatePost?: Resolver<Maybe<ResolversTypes['UpdatePostResponse']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, 'content' | 'id'>>;
+  updateComment?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<MutationUpdateCommentArgs, 'content' | 'id'>>;
+  updatePost?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, 'content' | 'id'>>;
 };
 
 export type PostResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   authorId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>;
+  comments?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  likedBy?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  likedBy?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getCommentsByPostId?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType, RequireFields<QueryGetCommentsByPostIdArgs, 'postId'>>;
-  getPostById?: Resolver<Maybe<ResolversTypes['GetPostByIdResponse']>, ParentType, ContextType, RequireFields<QueryGetPostByIdArgs, 'id'>>;
-  getPosts?: Resolver<Array<Maybe<ResolversTypes['Post']>>, ParentType, ContextType>;
-  getUserById?: Resolver<Maybe<ResolversTypes['GetUserByIdResponse']>, ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, 'id'>>;
-  getUserByName?: Resolver<Maybe<ResolversTypes['GetUserByNameResponse']>, ParentType, ContextType, RequireFields<QueryGetUserByNameArgs, 'username'>>;
+  getCommentById?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<QueryGetCommentByIdArgs, 'id'>>;
+  getComments?: Resolver<Maybe<ResolversTypes['CRUDCommentsResponse']>, ParentType, ContextType>;
+  getCommentsPost?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<QueryGetCommentsPostArgs, 'postId'>>;
+  getCommentsUser?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<QueryGetCommentsUserArgs, 'userId'>>;
+  getPostById?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<QueryGetPostByIdArgs, 'id'>>;
+  getPosts?: Resolver<Maybe<ResolversTypes['CRUDPostsResponse']>, ParentType, ContextType>;
+  getPostsUser?: Resolver<Maybe<ResolversTypes['CRUDPostsResponse']>, ParentType, ContextType, RequireFields<QueryGetPostsUserArgs, 'userId'>>;
+  getUserById?: Resolver<Maybe<ResolversTypes['CRUserResponse']>, ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, 'id'>>;
+  getUserByName?: Resolver<Maybe<ResolversTypes['CRUserResponse']>, ParentType, ContextType, RequireFields<QueryGetUserByNameArgs, 'username'>>;
   getUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>;
 };
 
@@ -481,41 +404,27 @@ export type SignInUserResponseResolvers<ContextType = DataSourceContext, ParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UpdatePostResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['UpdatePostResponse'] = ResolversParentTypes['UpdatePostResponse']> = {
-  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>;
+  comments?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  likedComments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>;
-  likedPosts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>;
-  posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>;
+  likedComments?: Resolver<Maybe<Array<ResolversTypes['Comment']>>, ParentType, ContextType>;
+  likedPosts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>;
+  posts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = DataSourceContext> = {
+  CRUDCommentResponse?: CrudCommentResponseResolvers<ContextType>;
+  CRUDCommentsResponse?: CrudCommentsResponseResolvers<ContextType>;
+  CRUDPostResponse?: CrudPostResponseResolvers<ContextType>;
+  CRUDPostsResponse?: CrudPostsResponseResolvers<ContextType>;
+  CRUserResponse?: CrUserResponseResolvers<ContextType>;
   Comment?: CommentResolvers<ContextType>;
-  CreateCommentResponse?: CreateCommentResponseResolvers<ContextType>;
-  CreatePostResponse?: CreatePostResponseResolvers<ContextType>;
-  CreateUserResponse?: CreateUserResponseResolvers<ContextType>;
-  DeleteCommentResponse?: DeleteCommentResponseResolvers<ContextType>;
-  DeletePostResponse?: DeletePostResponseResolvers<ContextType>;
-  GetPostByIdResponse?: GetPostByIdResponseResolvers<ContextType>;
-  GetUserByIdResponse?: GetUserByIdResponseResolvers<ContextType>;
-  GetUserByNameResponse?: GetUserByNameResponseResolvers<ContextType>;
-  LikeCommentResponse?: LikeCommentResponseResolvers<ContextType>;
-  LikePostResponse?: LikePostResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   SignInUserResponse?: SignInUserResponseResolvers<ContextType>;
-  UpdatePostResponse?: UpdatePostResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 
