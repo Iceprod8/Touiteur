@@ -4,33 +4,43 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Col, Container, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { saveAuthToken } from "../auth/authUtils";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuthToken, saveAuthToken } from "../auth/authUtils";
 
 const LOGIN_MUTATION = gql`
-  mutation Login($username: String!, $password: String!) {
-    login(email: $username, password: $password) {
-      token
-    }
+  mutation SignIn($username: String!, $password: String!) {
+  signIn(username: $username, password: $password) {
+    success
+    message
+    token
   }
+}
 `;
 
-const LoginComponent = () => {
+const LoginComponent = ({ onLogin }: {onLogin: () => void}) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
+
     const [login, { loading }] = useMutation(LOGIN_MUTATION, {
         onCompleted: (data) => {
-
-            const token = data.login.token;
-
-            saveAuthToken(token);
-
+            console.log(data);
+    
+            if (data.signIn.success) {
+                const token = data.signIn.token;
+                saveAuthToken(token);
+                sessionStorage.setItem("username", username);
+    
+                onLogin();                  
+            } else {
+                setError("Login didn't work: " + data.signIn.message);
+            }
         },
         onError: (err) => {
             setError("Login didn't work: " + err.message);
         }
     });
+    
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
