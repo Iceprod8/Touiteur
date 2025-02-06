@@ -3,7 +3,11 @@ import { Resolvers } from "./types.js";
 /*
 USER
 */
-import { createUser, signIn } from "./resolvers/mutations/userMutation.js";
+import {
+  createUser,
+  signIn,
+  updateUser,
+} from "./resolvers/mutations/userMutation.js";
 import {
   getUsers,
   getUserById,
@@ -39,6 +43,17 @@ import {
   updateComment,
 } from "./resolvers/mutations/commentMutation.js";
 
+/*
+LIKE
+*/
+import {
+  likeComment,
+  likePost,
+  unlikeComment,
+  unlikePost,
+} from "./resolvers/mutations/likeMutation.js";
+import { getAllLikes, getUserLikes } from "./resolvers/querys/likeQuery.js";
+
 export const resolvers: Resolvers = {
   Query: {
     getUsers,
@@ -53,10 +68,14 @@ export const resolvers: Resolvers = {
     getCommentById,
     getCommentsPost,
     getCommentsUser,
+
+    getAllLikes,
+    getUserLikes,
   },
 
   Mutation: {
     createUser,
+    updateUser,
     signIn,
 
     createPost,
@@ -66,29 +85,56 @@ export const resolvers: Resolvers = {
     createComment,
     deleteComment,
     updateComment,
+
+    likePost,
+    unlikePost,
+    likeComment,
+    unlikeComment,
   },
 
   User: {
     posts: (parent, _, { dataSources }) => {
       return dataSources.db.post.findMany({
         where: { authorId: parent.id },
-        include: { author: true },
       });
     },
-    comments: (parent, _, { dataSources }) => {
+    comments: ({ id }, _, { dataSources }) => {
       return dataSources.db.comment.findMany({
-        where: { authorId: parent.id },
-        include: { author: true, post: { include: { author: true } } },
+        where: { authorId: id },
+      });
+    },
+    likedPosts: ({ id }, _, { dataSources }) => {
+      return dataSources.db.post.findMany({
+        where: { authorId: id },
+      });
+    },
+    likedComments: ({ id }, _, { dataSources }) => {
+      return dataSources.db.comment.findMany({
+        where: { authorId: id },
       });
     },
   },
 
   Post: {
-    comments: (parent, _, { dataSources }) => {
+    author: ({ authorId }, _, { dataSources }) => {
+      return dataSources.db.user.findUniqueOrThrow({ where: { id: authorId } });
+    },
+    comments: ({ id }, _, { dataSources }) => {
       return dataSources.db.comment.findMany({
-        where: { postId: parent.id },
-        include: { author: true, post: { include: { author: true } } },
+        where: { postId: id },
       });
+    },
+    likedBy: ({ authorId }, _, { dataSources }) => {
+      return dataSources.db.user.findMany({ where: { id: authorId } });
+    },
+  },
+
+  Comment: {
+    author: ({ authorId }, _, { dataSources }) => {
+      return dataSources.db.user.findUniqueOrThrow({ where: { id: authorId } });
+    },
+    likedBy: ({ authorId }, _, { dataSources }) => {
+      return dataSources.db.user.findMany({ where: { id: authorId } });
     },
   },
 };

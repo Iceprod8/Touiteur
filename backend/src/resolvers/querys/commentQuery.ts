@@ -7,9 +7,7 @@ export const getComments: QueryResolvers["getComments"] = async (
   { dataSources }: DataSourceContext
 ) => {
   try {
-    const comments = await dataSources.db.comment.findMany({
-      include: { author: true, post: { include: { author: true } } },
-    });
+    const comments = await dataSources.db.comment.findMany();
     if (!comments.length)
       throw new Error(
         "❌ Aucun commentaire trouvé. Veuillez réessayer plus tard."
@@ -37,7 +35,6 @@ export const getCommentById: QueryResolvers["getCommentById"] = async (
   try {
     const comment = await dataSources.db.comment.findUnique({
       where: { id },
-      include: { author: true, post: { include: { author: true } } },
     });
     if (!comment)
       throw new Error(
@@ -66,7 +63,6 @@ export const getCommentsUser: QueryResolvers["getCommentsUser"] = async (
   try {
     const comments = await dataSources.db.comment.findMany({
       where: { authorId: userId },
-      include: { author: true },
     });
     if (!comments.length)
       throw new Error(
@@ -95,7 +91,6 @@ export const getCommentsPost: QueryResolvers["getCommentsPost"] = async (
   try {
     const comments = await dataSources.db.comment.findMany({
       where: { postId: postId },
-      include: { author: true },
     });
     if (!comments.length)
       throw new Error(
