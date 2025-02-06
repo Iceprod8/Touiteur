@@ -7,9 +7,7 @@ export const getPosts: QueryResolvers["getPosts"] = async (
   { dataSources }: DataSourceContext
 ) => {
   try {
-    const posts = await dataSources.db.post.findMany({
-      include: { author: true },
-    });
+    const posts = await dataSources.db.post.findMany();
     if (!posts.length)
       throw new Error("❌ Aucun post trouvé. Veuillez réessayer plus tard.");
     return {
@@ -31,7 +29,6 @@ export const getPostById: QueryResolvers["getPostById"] = async (
   try {
     const post = await dataSources.db.post.findUnique({
       where: { id },
-      include: { author: true },
     });
     if (!post)
       throw new Error("❌ Post introuvable. Vérifiez l'ID et réessayez.");
@@ -54,7 +51,6 @@ export const getPostsUser: QueryResolvers["getPostsUser"] = async (
   try {
     const posts = await dataSources.db.post.findMany({
       where: { authorId: userId },
-      include: { author: true },
     });
     if (!posts.length)
       throw new Error(
