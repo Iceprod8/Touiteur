@@ -3,7 +3,7 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import { Card } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FaHeart, FaComment } from "react-icons/fa";
 
 const GET_POST_BY_ID = gql`
@@ -29,15 +29,17 @@ query GetPostById($id: ID!) {
 `;
 
 const COMMENT_MUTATION = gql`
-mutation Mutation($content: String!, $postId: ID!) {
-  createComment(content: $content, postId: $postId) {
+mutation Mutation($content: String!, $authorId: ID!, $postId: ID!) {
+  createComment(content: $content, authorId: $authorId, postId: $postId) {
     code
+
   }
 }
 `;
 
 function PostComponent() {
     const { id } = useParams();
+    const authorId = "5c3cd9cc-eae3-4ea3-a1fb-d576616fde43";
     console.log(id);
     const { loading, error, data } = useQuery(GET_POST_BY_ID, {
         variables: { id },
@@ -60,7 +62,7 @@ function PostComponent() {
             setErrorComment("Missing comment");
             return;
         }
-        comment({ variables: { newComment, id } });
+        comment({ variables: { content: newComment, authorId, postId: id } });
     };
 
     if (loading) return <p>Chargement...</p>;
