@@ -3,7 +3,11 @@ import { Resolvers } from "./types.js";
 /*
 USER
 */
-import { createUser, signIn } from "./resolvers/mutations/userMutation.js";
+import {
+  createUser,
+  signIn,
+  updateUser,
+} from "./resolvers/mutations/userMutation.js";
 import {
   getUsers,
   getUserById,
@@ -57,6 +61,7 @@ export const resolvers: Resolvers = {
 
   Mutation: {
     createUser,
+    updateUser,
     signIn,
 
     createPost,

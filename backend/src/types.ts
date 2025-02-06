@@ -78,6 +78,7 @@ export type Mutation = {
   signIn?: Maybe<SignInUserResponse>;
   updateComment?: Maybe<CrudCommentResponse>;
   updatePost?: Maybe<CrudPostResponse>;
+  updateUser?: Maybe<CrUserResponse>;
 };
 
 
@@ -125,6 +126,12 @@ export type MutationUpdateCommentArgs = {
 export type MutationUpdatePostArgs = {
   content: Scalars['String']['input'];
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateUserArgs = {
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
 
 export type Post = {
@@ -371,6 +378,7 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
   signIn?: Resolver<Maybe<ResolversTypes['SignInUserResponse']>, ParentType, ContextType, RequireFields<MutationSignInArgs, 'password' | 'username'>>;
   updateComment?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<MutationUpdateCommentArgs, 'content' | 'id'>>;
   updatePost?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, 'content' | 'id'>>;
+  updateUser?: Resolver<Maybe<ResolversTypes['CRUserResponse']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'password' | 'username'>>;
 };
 
 export type PostResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {

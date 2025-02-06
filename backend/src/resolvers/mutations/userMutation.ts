@@ -15,8 +15,8 @@ export const signIn: MutationResolvers["signIn"] = async (
     const user = await dataSources.db.user.findFirstOrThrow({
       where: { username },
     });
-    const isValidPassword = comparePasswords(password, user.password);
 
+    const isValidPassword = await comparePasswords(password, user.password);
     if (!isValidPassword) {
       throw new Error("Invalid password");
     }
@@ -65,6 +65,44 @@ export const createUser: MutationResolvers["createUser"] = async (
     return {
       code: 400,
       message: "Something bad happened",
+      success: false,
+      user: null,
+    };
+  }
+};
+
+export const updateUser: MutationResolvers["updateUser"] = async (
+  _,
+  { username, password },
+  { dataSources, user }: DataSourceContext
+) => {
+  try {
+    if (!user) {
+      return {
+        code: 401,
+        message: "Authentification requise",
+        success: false,
+        user: null,
+      };
+    }
+    const updateUser = await dataSources.db.user.update({
+      where: { id: user.id },
+      data: {
+        username: username,
+        password: await hashPassword(password),
+      },
+    });
+    return {
+      code: 201,
+      message: `User ${updateUser.username} has been modified`,
+      success: true,
+      user: updateUser,
+    };
+  } catch (error) {
+    console.error("Erreur lors de la modification du user :", error);
+    return {
+      code: 500,
+      message: "Une erreur est survenue",
       success: false,
       user: null,
     };

@@ -18,6 +18,7 @@ export const typeDefs = gql`
 
   type Mutation {
     createUser(username: String!, password: String!): CRUserResponse
+    updateUser(username: String!, password: String!): CRUserResponse
     signIn(username: String!, password: String!): SignInUserResponse
 
     createPost(content: String!, authorId: ID!): CRUDPostResponse
