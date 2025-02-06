@@ -4,11 +4,16 @@ import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { saveAuthToken } from "../auth/authUtils";
 
 const REGISTER_MUTATION = gql`
-  mutation Register($username: String!, $password: String!) {
-    register(email: $username, password: $password) {
-      token
+  mutation CreateUser($username: String!, $password: String!) {
+  createUser(username: $username, password: $password) {
+    user {
+      id
+      username
     }
+    success
+    message
   }
+}
 `;
 
 const RegisterComponent = () => {
@@ -68,7 +73,7 @@ const RegisterComponent = () => {
                                 </InputGroup>
                                 <InputGroup className="mb-4">
                                     <Form.Control
-                                        type="passwordConfirm"
+                                        type="password"
                                         placeholder="confirm password"
                                         value={passwordConfirm}
                                         onChange={(e) => setPasswordConfirm(e.target.value)}

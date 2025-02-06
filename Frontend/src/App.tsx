@@ -12,7 +12,7 @@ import SearchComponent from './pages/search';
 import PostComponent from './pages/post'
 import ProfileComponent from './pages/Profile';
 import RegisterComponent from './pages/register';
-import { getAuthToken, logout } from './auth/authUtils';
+import { getAuthToken, getUsername, logout } from './auth/authUtils';
 
 const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' });
 
@@ -37,10 +37,14 @@ const client = new ApolloClient({
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const [username, setUsername] = useState("clem");
+  const [username, setUsername] = useState<string | null>(getUsername());
   const navigate = useNavigate();
 
-  const handleLogin = () => setIsLoggedIn(true);
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    setUsername(username);
+    navigate('/');
+  };
   const handleLogout = () => {
     logout();
     setIsLoggedIn(false);
@@ -54,7 +58,7 @@ function App() {
           <Route path="/" element={<AllCardsComponents />}/>
           <Route path="/popular" element={<PopularComponent />}/>
           <Route path="/recent" element={<RecentComponent />}/>
-          <Route path="/login" element={<LoginComponent />}/>
+          <Route path="/login" element={<LoginComponent onLogin={handleLogin} />}/>
           <Route path="/search" element={<SearchComponent />}/>
           <Route path="/profile" element={<ProfileComponent />}/>
           <Route path="/post/:id" element={<PostComponent />} />

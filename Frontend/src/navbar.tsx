@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 
 interface NavbarInterface {
   isLoggedIn: boolean;
-  username?: string;
+  username: string;
   onLogout: () => void ;
 }
 
