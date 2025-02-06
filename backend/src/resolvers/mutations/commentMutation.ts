@@ -15,7 +15,6 @@ export const createComment: MutationResolvers["createComment"] = async (
 
     const newComment = await dataSources.db.comment.create({
       data: { authorId, content, postId },
-      include: { author: true, post: { include: { author: true } } },
     });
     return {
       code: 201,
@@ -40,7 +39,6 @@ export const deleteComment: MutationResolvers["deleteComment"] = async (
   try {
     const commentToDelete = await dataSources.db.comment.findUnique({
       where: { id },
-      include: { author: true, post: { include: { author: true } } },
     });
     if (!commentToDelete)
       throw new Error("❌ Comment introuvable. Vérifiez l'ID et réessayez.");
@@ -69,7 +67,6 @@ export const updateComment: MutationResolvers["updateComment"] = async (
   try {
     const commentToUpdate = await dataSources.db.comment.findUnique({
       where: { id },
-      include: { author: true },
     });
     if (!commentToUpdate)
       throw new Error("❌ Comment introuvable. Vérifiez l'ID et réessayez.");
@@ -77,7 +74,6 @@ export const updateComment: MutationResolvers["updateComment"] = async (
     const updatedComment = await dataSources.db.comment.update({
       where: { id },
       data: { content },
-      include: { author: true, post: { include: { author: true } } },
     });
     return {
       code: 200,

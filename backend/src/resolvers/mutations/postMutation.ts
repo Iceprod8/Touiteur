@@ -15,7 +15,6 @@ export const createPost: MutationResolvers["createPost"] = async (
 
     const newPost = await dataSources.db.post.create({
       data: { authorId, content },
-      include: { author: true },
     });
     return {
       code: 201,
@@ -38,7 +37,6 @@ export const deletePost: MutationResolvers["deletePost"] = async (
   try {
     const postToDelete = await dataSources.db.post.findUnique({
       where: { id },
-      include: { author: true },
     });
     if (!postToDelete)
       throw new Error("❌ Post introuvable. Vérifiez l'ID et réessayez.");
@@ -65,7 +63,6 @@ export const updatePost: MutationResolvers["updatePost"] = async (
   try {
     const postToUpdate = await dataSources.db.post.findUnique({
       where: { id },
-      include: { author: true },
     });
     if (!postToUpdate)
       throw new Error("❌ Post introuvable. Vérifiez l'ID et réessayez.");
@@ -73,7 +70,6 @@ export const updatePost: MutationResolvers["updatePost"] = async (
     const updatedPost = await dataSources.db.post.update({
       where: { id },
       data: { content },
-      include: { author: true },
     });
     return {
       code: 200,

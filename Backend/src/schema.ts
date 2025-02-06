@@ -14,6 +14,9 @@ export const typeDefs = gql`
     getCommentById(id: ID!): CRUDCommentResponse
     getCommentsUser(userId: ID!): CRUDCommentResponse
     getCommentsPost(postId: ID!): CRUDCommentResponse
+
+    getAllLikes: GetLikesResponse
+    getUserLikes(userId: ID!): GetLikesResponse
   }
 
   type Mutation {
@@ -32,6 +35,11 @@ export const typeDefs = gql`
     ): CRUDCommentResponse
     deleteComment(id: ID!): CRUDCommentResponse
     updateComment(id: ID!, content: String!): CRUDCommentResponse
+
+    likePost(userId: ID!, postId: ID!): CRUDPostResponse
+    unlikePost(userId: ID!, postId: ID!): CRUDPostResponse
+    likeComment(userId: ID!, commentId: ID!): CRUDCommentResponse
+    unlikeComment(userId: ID!, commentId: ID!): CRUDCommentResponse
   }
 
   type User {
@@ -46,7 +54,6 @@ export const typeDefs = gql`
   type Post {
     id: ID!
     content: String!
-    authorId: ID!
     author: User!
     comments: [Comment!]
     likedBy: [User!]
@@ -55,9 +62,7 @@ export const typeDefs = gql`
   type Comment {
     id: ID!
     content: String!
-    authorId: ID!
     author: User!
-    postId: ID!
     post: Post!
     likedBy: [User!]
   }
@@ -103,5 +108,13 @@ export const typeDefs = gql`
     success: Boolean!
     message: String!
     comment: Comment
+  }
+
+  type GetLikesResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    likedPosts: [Post]!
+    likedComments: [Comment]!
   }
 `;
