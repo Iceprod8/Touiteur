@@ -9,6 +9,8 @@ import PopularComponent from './pages/popular';
 import RecentComponent from './pages/recent';
 import LoginComponent from './pages/login';
 import SearchComponent from './pages/search';
+import PostComponent from './pages/post'
+import ProfileComponent from './pages/Profile';
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
@@ -18,12 +20,10 @@ const client = new ApolloClient({
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState("JohnDoe");
+  const [username, setUsername] = useState("clem");
 
   const handleLogin = () => setIsLoggedIn(true);
   const handleLogout = () => setIsLoggedIn(false);
-
-  const [page, setPage] = useState(1);
 
   return (
     <div>
@@ -35,6 +35,8 @@ function App() {
           <Route path="/recent" element={<RecentComponent />}/>
           <Route path="/login" element={<LoginComponent />}/>
           <Route path="/search" element={<SearchComponent />}/>
+          <Route path="/profile" element={<ProfileComponent />}/>
+          <Route path="/post/:id" element={<PostComponent />} />
         </Routes>
       </Router>
     </div>

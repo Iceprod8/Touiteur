@@ -6,6 +6,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
+import { Link } from "react-router-dom";
 
 const GET_USERNAME = gql`
 query users($search: Int){
@@ -15,9 +16,9 @@ query users($search: Int){
     }
     results {
       posts{
-        title 
+        id
         content
-        comment
+        comments
         like
       }
     }
@@ -42,15 +43,10 @@ function SearchComponent() {
     }
 
 
-    // if (loading) return <h1>Chargement...</h1>;
-    // if (error) return <h1>Erreur: {error.message}</h1>;
-
     return (
         <div>
-            <p>oui</p>
-
-            <Navbar className="bg-body-tertiary justify-content-between">
-                <Form onSubmit={search}>
+            <Navbar className="justify-content-between">
+                <Form onSubmit={search} className="mb-4">
                     <Row className="align-items-center">
                         <Col xs="auto">
                             <InputGroup>
@@ -64,16 +60,15 @@ function SearchComponent() {
                             </InputGroup>
                         </Col>
                         <Col xs="auto">
-                            <Button type="submit">Search</Button>
+                            <Button type="submit" className="btn-dark">Search</Button>
                         </Col>
                     </Row>
                 </Form>
             </Navbar>
 
-            {loading && <p>Chargement...</p>}
-            {error && <h1>Aucun utilisateur trouvé :\</h1>}
+            {loading && <h3>Chargement...</h3>}
+            {error && <h3>Aucun utilisateur trouvé :\</h3>}
 
-            {/* Affichage conditionnel des posts */}
             {data?.users?.results?.posts?.length > 0 ? (
                 <div>
                     <br />
@@ -88,9 +83,13 @@ function SearchComponent() {
                                         <Card.Text>{post.content}</Card.Text>
                                     </Card.Body>
                                     <Card.Footer>
-                                        <b>comment: </b>{post.status} <br />
-                                        <b>like: </b>{post.gender}
+                                        <p>
+                                            <b>comments: </b>{post.comments.length} <br />
+                                            <b>likes: </b>{post.likes}
+                                        </p>
+                                        <Link to={`/post/${post.id}`}>Voir plus</Link>
                                     </Card.Footer>
+                                    
                                 </Card>
                             </Col>
                         ))}
