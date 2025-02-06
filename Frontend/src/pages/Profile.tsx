@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
