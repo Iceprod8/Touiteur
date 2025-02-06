@@ -3,8 +3,8 @@ import gql from "graphql-tag";
 export const typeDefs = gql`
   type Query {
     getUsers: [User]!
-    getUserById(id: ID!): CRUserResponse
-    getUserByName(username: String!): CRUserResponse
+    getUserById(id: ID!): RUUserResponse
+    getUserByName(username: String!): RUUserResponse
 
     getPosts: CRUDPostsResponse
     getPostById(id: ID!): CRUDPostResponse
@@ -14,11 +14,15 @@ export const typeDefs = gql`
     getCommentById(id: ID!): CRUDCommentResponse
     getCommentsUser(userId: ID!): CRUDCommentResponse
     getCommentsPost(postId: ID!): CRUDCommentResponse
+
+    getAllLikes: GetLikesResponse
+    getUserLikes(userId: ID!): GetLikesResponse
   }
 
   type Mutation {
-    createUser(username: String!, password: String!): CRUserResponse
-    signIn(username: String!, password: String!): SignInUserResponse
+    createUser(username: String!, password: String!): AuthUserResponse
+    updateUser(username: String!, password: String!): RUUserResponse
+    signIn(username: String!, password: String!): AuthUserResponse
 
     createPost(content: String!, authorId: ID!): CRUDPostResponse
     deletePost(id: ID!): CRUDPostResponse
@@ -31,6 +35,11 @@ export const typeDefs = gql`
     ): CRUDCommentResponse
     deleteComment(id: ID!): CRUDCommentResponse
     updateComment(id: ID!, content: String!): CRUDCommentResponse
+
+    likePost(userId: ID!, postId: ID!): CRUDPostResponse
+    unlikePost(userId: ID!, postId: ID!): CRUDPostResponse
+    likeComment(userId: ID!, commentId: ID!): CRUDCommentResponse
+    unlikeComment(userId: ID!, commentId: ID!): CRUDCommentResponse
   }
 
   type User {
@@ -45,7 +54,6 @@ export const typeDefs = gql`
   type Post {
     id: ID!
     content: String!
-    authorId: ID!
     author: User!
     comments: [Comment!]
     likedBy: [User!]
@@ -54,24 +62,23 @@ export const typeDefs = gql`
   type Comment {
     id: ID!
     content: String!
-    authorId: ID!
     author: User!
-    postId: ID!
     post: Post!
     likedBy: [User!]
   }
 
-  type CRUserResponse {
+  type RUUserResponse {
     code: Int!
     success: Boolean!
     message: String!
     user: User
   }
 
-  type SignInUserResponse {
+  type AuthUserResponse {
     code: Int!
     success: Boolean!
     message: String!
+    user: User
     token: String
   }
 
@@ -101,5 +108,13 @@ export const typeDefs = gql`
     success: Boolean!
     message: String!
     comment: Comment
+  }
+
+  type GetLikesResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    likedPosts: [Post]!
+    likedComments: [Comment]!
   }
 `;
