@@ -14,7 +14,7 @@ const REGISTER_MUTATION = gql`
 const RegisterComponent = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [passwordConfim, setPasswordConfirm] = useState("");
+    const [passwordConfirm, setPasswordConfirm] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [register, { loading }] = useMutation(REGISTER_MUTATION, {
         onCompleted: (data) => {
@@ -31,11 +31,11 @@ const RegisterComponent = () => {
     
         const handleRegister = async (e: React.FormEvent) => {
             e.preventDefault();
-            if (!username || !password || !passwordConfim) {
+            if (!username || !password || !passwordConfirm) {
               setError("Missing data");
               return;
             }
-            if (password != passwordConfim) {
+            if (password != passwordConfirm) {
                 setError("Not the same password");
                 return;
               }
@@ -70,7 +70,7 @@ const RegisterComponent = () => {
                                     <Form.Control
                                         type="passwordConfirm"
                                         placeholder="confirm password"
-                                        value={password}
+                                        value={passwordConfirm}
                                         onChange={(e) => setPasswordConfirm(e.target.value)}
                                     />
                                 </InputGroup>
