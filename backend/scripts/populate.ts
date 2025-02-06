@@ -93,6 +93,43 @@ export default async function populate(): Promise<void> {
   ];
 
   await prisma.comment.createMany({ data: commentsData });
+  const commentsList = await prisma.comment.findMany();
 
-  console.log("✅ Base de données peuplée avec succès.");
+  await prisma.post.update({
+    where: { id: postsList[0].id },
+    data: {
+      likedBy: { connect: [{ id: usersList[1].id }, { id: usersList[2].id }] },
+    },
+  });
+
+  await prisma.post.update({
+    where: { id: postsList[1].id },
+    data: {
+      likedBy: { connect: [{ id: usersList[0].id }, { id: usersList[3].id }] },
+    },
+  });
+
+  await prisma.post.update({
+    where: { id: postsList[2].id },
+    data: { likedBy: { connect: [{ id: usersList[4].id }] } },
+  });
+
+  await prisma.comment.update({
+    where: { id: commentsList[0].id },
+    data: {
+      likedBy: { connect: [{ id: usersList[2].id }, { id: usersList[3].id }] },
+    },
+  });
+
+  await prisma.comment.update({
+    where: { id: commentsList[1].id },
+    data: {
+      likedBy: { connect: [{ id: usersList[0].id }, { id: usersList[4].id }] },
+    },
+  });
+
+  await prisma.comment.update({
+    where: { id: commentsList[2].id },
+    data: { likedBy: { connect: [{ id: usersList[1].id }] } },
+  });
 }
