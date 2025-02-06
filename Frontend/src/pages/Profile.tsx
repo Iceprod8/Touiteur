@@ -1,31 +1,66 @@
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
-import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Row, Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const POST_MUTATION = gql`
-  mutation Post($content: String!) {
-    register(content: $content) {
+mutation CreatePost($content: String!, $authorId: ID!) {
+  createPost(content: $content, authorId: $authorId) {
+    code
+    success
+    message
+    post {
       content
+      author {
+        username
+      }
     }
   }
+}
+`;
+
+const GET_POSTS_USER = gql`
+query GetPostsUser($userId: ID!) {
+  getPostsUser(userId: $userId) {
+    code
+    message
+    success
+    posts {
+      content
+      comments {
+        content
+        author {
+          username
+        }
+      }
+    }
+  }
+}
 `;
 
 function ProfileComponent() {
+    const id = "";
     const [content, setContent] = useState("");
-    const [error, setError] = useState<string | null>(null);
-    const [register, { loading }] = useMutation(POST_MUTATION, {
+    const [errorPost, setErrorPost] = useState<string | null>(null);
+
+    const { loading, error, data } = useQuery(GET_POSTS_USER, {
+        variables: { id },
+        skip: !id
+    });
+
+    const [post] = useMutation(POST_MUTATION, {
         onError: (err) => {
-            setError("Posting didn't work: " + err.message);
+            setErrorPost("Posting didn't work: " + err.message);
         }
     });
 
     const handlePost = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!content) {
-            setError("Missing data");
+            setErrorPost("Missing data");
             return;
         }
-        register({ variables: { content } });
+        post({ variables: { content } });
     };
 
 
@@ -54,6 +89,25 @@ function ProfileComponent() {
                     </Col>
                 </Row>
             </Container>
+            <Row xs={1} sm={2} md={3} lg={4} xl={4} className="g-3">
+        {data.getPosts.posts.map((post: any) => (
+          <Col key={post.id}>
+            <Card style={{ width: '18rem' }}>
+              <Card.Header>{post.author.username}</Card.Header>
+              <Card.Body>
+                <Card.Text>{post.content}</Card.Text>
+              </Card.Body>
+              <Card.Footer>
+                <p>
+                  <span><b>Comments:</b> {post.comments.length}</span>
+                  <span style={{ marginLeft: "10px" }}><b>Likes:</b> 8</span>
+                </p>
+                <Link to={`/post/${post.id}`}>Voir plus</Link>
+              </Card.Footer>
+            </Card>
+          </Col>
+        ))}
+      </Row>
         </div>
     );
 }

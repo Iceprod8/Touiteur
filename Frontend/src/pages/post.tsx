@@ -3,7 +3,7 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import { Card } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaHeart, FaComment } from "react-icons/fa";
 
 const GET_POST_BY_ID = gql`
@@ -29,11 +29,11 @@ query GetPostById($id: ID!) {
 `;
 
 const COMMENT_MUTATION = gql`
-  mutation Comment($comment: String!) {
-    comment(comment: $comment) {
-      token
-    }
+mutation Mutation($content: String!, $postId: ID!) {
+  createComment(content: $content, postId: $postId) {
+    code
   }
+}
 `;
 
 function PostComponent() {
@@ -41,9 +41,9 @@ function PostComponent() {
     console.log(id);
     const { loading, error, data } = useQuery(GET_POST_BY_ID, {
         variables: { id },
+        skip: !id
     });
     console.log(data);
-    const post = data.getPostById.post;
 
     const [newComment, setNewComment] = useState("");
     const [errorComment, setErrorComment] = useState<string | null>(null);
@@ -60,7 +60,7 @@ function PostComponent() {
             setErrorComment("Missing comment");
             return;
         }
-        comment({ variables: { newComment } });
+        comment({ variables: { newComment, id } });
     };
 
     if (loading) return <p>Chargement...</p>;
@@ -78,14 +78,14 @@ function PostComponent() {
                         width="40"
                         height="40"
                     />
-                    <b>{post.author.username}</b>
+                    <b>{data.getPostById.post.author.username}</b>
                 </Card.Header>
                 <Card.Body>
-                    <Card.Text>{post.content}</Card.Text>
+                    <Card.Text>{data.getPostById.post.content}</Card.Text>
                 </Card.Body>
                 <Card.Footer className="d-flex justify-content-between align-items-center bg-white">
                     <span className="d-flex align-items-center">
-                        <FaComment className="text-primary me-1" /> {post.comments.length}
+                        <FaComment className="text-primary me-1" /> {data.getPostById.post.comments.length}
                     </span>
                     <span className="d-flex align-items-center">
                         <FaHeart className="text-danger me-1" /> 3 {/* {post.likes} */}
@@ -95,7 +95,7 @@ function PostComponent() {
 
             {/* Liste des commentaires */}
             <div className="mt-3" style={{ width: "40rem" }}>
-                {post.comments.map((comment: any, index: number) => (
+                {data.getPostById.post.comments.map((comment: any, index: number) => (
                     <Card key={index} className="mb-2 p-2" style={{ borderLeft: "4px solid #007bff", borderRadius: "8px" }}>
                         <div className="d-flex align-items-center">
                             <img 
