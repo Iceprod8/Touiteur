@@ -43,7 +43,7 @@ function App() {
   const handleLogin = () => {
     setIsLoggedIn(true);
     setUsername(username);
-    navigate('/register');
+    navigate('/');
   };
   const handleLogout = () => {
     logout();
