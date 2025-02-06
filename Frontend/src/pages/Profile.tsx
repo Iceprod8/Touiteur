@@ -87,7 +87,6 @@ function ProfileComponent() {
             return;
         }
         createPost({ variables: { content, authorId: userId } });
-        // refetch();
     };
 
     //supprimer un post
@@ -102,7 +101,6 @@ function ProfileComponent() {
 
     const handleDelete = async (id: String) => {
         deletePost({ variables: { id } });
-        // refetch();
     };
 
     return (
