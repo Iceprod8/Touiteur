@@ -10,32 +10,23 @@ export const createPost: MutationResolvers["createPost"] = async (
     const author = await dataSources.db.user.findUnique({
       where: { id: authorId },
     });
-
-    if (!author) throw new Error("Auteur introuvable.");
+    if (!author)
+      throw new Error("❌ Auteur introuvable. Vérifiez l'ID et réessayez.");
 
     const newPost = await dataSources.db.post.create({
-      data: {
-        authorId,
-        content,
-      },
+      data: { authorId, content },
       include: { author: true },
     });
-
     return {
       code: 201,
-      message: "Post créé avec succès.",
       success: true,
+      message: "✅ Post créé avec succès.",
       post: newPost,
     };
-  } catch (error: unknown) {
-    return {
-      code: 500,
-      message: `Erreur lors de la création du post: ${
-        (error as Error).message
-      }`,
-      success: false,
-      post: null,
-    };
+  } catch (error) {
+    throw new Error(
+      `⚠️ Erreur lors de la création du post: ${(error as Error).message}`
+    );
   }
 };
 
@@ -49,44 +40,20 @@ export const deletePost: MutationResolvers["deletePost"] = async (
       where: { id },
       include: { author: true },
     });
+    if (!postToDelete)
+      throw new Error("❌ Post introuvable. Vérifiez l'ID et réessayez.");
 
-    if (!postToDelete) throw new Error("Post introuvable.");
-
-    const author = await dataSources.db.user.findUnique({
-      where: { id: postToDelete.authorId },
-    });
-
-    if (!author)
-      throw new Error(`Auteur introuvable pour le post ${postToDelete.id}`);
-
-    if (!postToDelete) {
-      return {
-        code: 404,
-        message: "Post introuvable.",
-        success: false,
-        post: null,
-      };
-    }
-
-    await dataSources.db.post.delete({
-      where: { id },
-    });
-
+    await dataSources.db.post.delete({ where: { id } });
     return {
       code: 200,
-      message: "Post supprimé avec succès.",
       success: true,
+      message: "✅ Post supprimé avec succès.",
       post: postToDelete,
     };
-  } catch (error: unknown) {
-    return {
-      code: 500,
-      message: `Erreur lors de la suppression du post: ${
-        (error as Error).message
-      }`,
-      success: false,
-      post: null,
-    };
+  } catch (error) {
+    throw new Error(
+      `⚠️ Erreur lors de la suppression du post: ${(error as Error).message}`
+    );
   }
 };
 
@@ -100,45 +67,23 @@ export const updatePost: MutationResolvers["updatePost"] = async (
       where: { id },
       include: { author: true },
     });
-
-    if (!postToUpdate) throw new Error("Post introuvable.");
-
-    const author = await dataSources.db.user.findUnique({
-      where: { id: postToUpdate.authorId },
-    });
-
-    if (!author)
-      throw new Error(`Auteur introuvable pour le post ${postToUpdate.id}`);
-
-    if (!postToUpdate) {
-      return {
-        code: 404,
-        message: "Post introuvable.",
-        success: false,
-        post: null,
-      };
-    }
+    if (!postToUpdate)
+      throw new Error("❌ Post introuvable. Vérifiez l'ID et réessayez.");
 
     const updatedPost = await dataSources.db.post.update({
       where: { id },
       data: { content },
       include: { author: true },
     });
-
     return {
       code: 200,
-      message: "Post mis à jour avec succès.",
       success: true,
+      message: "✅ Post mis à jour avec succès.",
       post: updatedPost,
     };
-  } catch (error: unknown) {
-    return {
-      code: 500,
-      message: `Erreur lors de la mise à jour du post: ${
-        (error as Error).message
-      }`,
-      success: false,
-      post: null,
-    };
+  } catch (error) {
+    throw new Error(
+      `⚠️ Erreur lors de la mise à jour du post: ${(error as Error).message}`
+    );
   }
 };

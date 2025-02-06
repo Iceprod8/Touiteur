@@ -1,0 +1,89 @@
+# 📜 Query : Récupérer tous les utilisateurs
+query GetUsers {
+  getUsers {
+    username
+    posts {
+      content
+    }
+    comments {
+      content
+      post {
+        content
+        author {
+          username
+        }
+      }
+    }
+  }
+}
+
+# 📜 Query : Récupérer un utilisateur par ID
+query GetUserById($userId: ID!) {
+  getUserById(id: $userId) {
+    user {
+      username
+      posts {
+        content
+      }
+      comments {
+        content
+        post {
+          content
+          author {
+            username
+          }
+        }
+      }
+    }
+    success
+    message
+  }
+}
+
+# 🚀 Mutation : Création d'un utilisateur
+mutation CreateUser($username: String!, $password: String!) {
+  createUser(username: $username, password: $password) {
+    user {
+      id
+      username
+    }
+    success
+    message
+  }
+}
+
+# 🚀 Mutation : Connexion d'un utilisateur
+mutation SignIn($username: String!, $password: String!) {
+  signIn(username: $username, password: $password) {
+    user {
+      id
+      username
+    }
+    success
+    message
+  }
+}
+
+# 🚀 Mutation : Mise à jour d'un utilisateur
+mutation UpdateUser($id: ID!, $username: String!, $password: String!) {
+  updateUser(id: $id, username: $username, password: $password) {
+    user {
+      id
+      username
+    }
+    success
+    message
+  }
+}
+
+# 🚀 Mutation : Suppression d'un utilisateur
+mutation DeleteUser($id: ID!) {
+  deleteUser(id: $id) {
+    user {
+      id
+      username
+    }
+    success
+    message
+  }
+}

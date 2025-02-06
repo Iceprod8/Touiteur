@@ -1,71 +1,93 @@
 import { Resolvers } from "./types.js";
-import { hashPassword } from "./modules/auth.js";
-import { signIn } from "./resolvers/mutations/signIn.js";
-import { DataSourceContext } from "./context.js";
-import { getPostById, getPosts } from "./resolvers/querys/postQuerry.js";
+
+/*
+USER
+*/
+import { createUser, signIn } from "./resolvers/mutations/userMutation.js";
 import {
   getUsers,
   getUserById,
   getUserByName,
 } from "./resolvers/querys/userQuery.js";
+
+/*
+POST
+*/
+import {
+  getPostById,
+  getPosts,
+  getPostsUser,
+} from "./resolvers/querys/postQuery.js";
 import {
   createPost,
   deletePost,
   updatePost,
 } from "./resolvers/mutations/postMutation.js";
 
+/*
+COMMENT
+*/
+import {
+  getComments,
+  getCommentById,
+  getCommentsPost,
+  getCommentsUser,
+} from "./resolvers/querys/commentQuery.js";
+import {
+  createComment,
+  deleteComment,
+  updateComment,
+} from "./resolvers/mutations/commentMutation.js";
+
 export const resolvers: Resolvers = {
   Query: {
     getUsers,
     getUserByName,
     getUserById,
+
     getPosts,
     getPostById,
+    getPostsUser,
+
+    getComments,
+    getCommentById,
+    getCommentsPost,
+    getCommentsUser,
   },
 
   Mutation: {
-    createUser: async (
-      _,
-      { username, password },
-      { dataSources }: DataSourceContext
-    ) => {
-      try {
-        const createdUser = await dataSources.db.user.create({
-          data: {
-            username,
-            password: await hashPassword(password),
-          },
-        });
-
-        return {
-          code: 201,
-          message: `User ${username} has been created`,
-          success: true,
-          user: {
-            id: createdUser.id,
-            username: createdUser.username,
-          },
-        };
-      } catch {
-        return {
-          code: 400,
-          message: "Something bad happened",
-          success: false,
-          user: null,
-        };
-      }
-    },
+    createUser,
     signIn,
+
     createPost,
     deletePost,
     updatePost,
+
+    createComment,
+    deleteComment,
+    updateComment,
   },
 
   User: {
     posts: (parent, _, { dataSources }) => {
       return dataSources.db.post.findMany({
-        where: { id: parent.id },
+        where: { authorId: parent.id },
         include: { author: true },
+      });
+    },
+    comments: (parent, _, { dataSources }) => {
+      return dataSources.db.comment.findMany({
+        where: { authorId: parent.id },
+        include: { author: true, post: { include: { author: true } } },
+      });
+    },
+  },
+
+  Post: {
+    comments: (parent, _, { dataSources }) => {
+      return dataSources.db.comment.findMany({
+        where: { postId: parent.id },
+        include: { author: true, post: { include: { author: true } } },
       });
     },
   },

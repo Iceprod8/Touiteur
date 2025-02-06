@@ -1,0 +1,128 @@
+# 📜 Query : Récupérer tous les commentaires
+query GetComments {
+  getComments {
+    code
+    success
+    message
+    comments {
+      content
+      author {
+        username
+      }
+      post {
+        content
+        author {
+          username
+        }
+      }
+    }
+  }
+}
+
+# 📜 Query : Récupérer un commentaire grace a son id
+query GetCommentById($id: ID!) {
+  getCommentById(id: $id) {
+    code
+    success
+    message
+    comment {
+      content
+      author {
+        username
+      }
+      post {
+        content
+        author {
+          username
+        }
+      }
+    }
+  }
+}
+
+# 📜 Query : Récupérer tous les commentaires d'un post via l'id du post
+query getCommentsPost($postId: ID!) {
+  getCommentById(id: $postId) {
+    code
+    success
+    message
+    comments {
+      content
+      author {
+        username
+      }
+      post {
+        content
+        author {
+          username
+        }
+      }
+    }
+  }
+}
+
+# 📜 Query : Récupérer tous les commentaires d'un user via l'id du user
+query getCommentsUser($postId: ID!) {
+  getCommentById(id: $postId) {
+    code
+    success
+    message
+    comments {
+      content
+      author {
+        username
+      }
+      post {
+        content
+        author {
+          username
+        }
+      }
+    }
+  }
+}
+
+# 🚀 Mutation : Création d'un commentaire
+mutation CreateComment($content: String!, $authorId: ID!, $postId: ID!) {
+  createComment(content: $content, authorId: $authorId, postId: $postId) {
+    code
+    success
+    message
+    comment {
+      content
+      author {
+        username
+      }
+    }
+  }
+}
+
+# 🚀 Mutation : Mise à jour d'un commentaire
+mutation UpdateComment($id: ID!, $content: String!) {
+  updateComment(id: $id, content: $content) {
+    code
+    success
+    message
+    comment {
+      content
+      author {
+        username
+      }
+    }
+  }
+}
+
+# 🚀 Mutation : Suppression d'un commentaire
+mutation DeleteComment($id: ID!) {
+  deleteComment(id: $id) {
+    code
+    success
+    message
+    comment {
+      content
+      author {
+        username
+      }
+    }
+  }
+}
