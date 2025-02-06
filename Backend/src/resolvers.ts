@@ -1,32 +1,30 @@
-import { Resolvers, Speciality } from "./types.js";
+import { Resolvers } from "./types.js";
 import { hashPassword } from "./modules/auth.js";
 import { signIn } from "./resolvers/mutations/signIn.js";
-
-const doctorsData = [
-  {
-    name: "Samia Mekame",
-    speciality: Speciality.Ophtalmologist,
-  },
-  {
-    name: "Catherine Bedoy",
-    speciality: Speciality.Ophtalmologist,
-  },
-];
+import { DataSourceContext } from "./context.js";
+import { getPosts } from "./resolvers/querys/postQuerry.js";
+import {
+  getUser,
+  getUserById,
+  getUserByName,
+} from "./resolvers/querys/userQuery.js";
 
 export const resolvers: Resolvers = {
   Query: {
-    doctors: (_, { specialities }) => {
-      return specialities
-        ? doctorsData.filter((doctor) =>
-            specialities.includes(doctor.speciality)
-          )
-        : doctorsData;
-    },
+    getUser,
+    getUserByName,
+    getUserById,
+    getPosts,
   },
+
   Mutation: {
-    createUser: async (_, { username, password }, context) => {
+    createUser: async (
+      _,
+      { username, password },
+      { dataSources }: DataSourceContext
+    ) => {
       try {
-        const createdUser = await context.dataSources.db.user.create({
+        const createdUser = await dataSources.db.user.create({
           data: {
             username,
             password: await hashPassword(password),

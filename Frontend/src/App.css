@@ -1,10 +1,22 @@
 #root {
-  max-width: 40%;
+  width: 100%;
   margin: 0 auto;
   text-align: center;
+  color: #212529;
+}
+
+.custom-link, .custom-link:hover {
+  text-decoration: none;
+  color: #212529;
+  cursor: pointer;
+}
+
+.custom-link:hover {
+  font-weight: 700;
+  opacity: 0.6;
 }
  
-.className{
+/*.className{
   height: 56;
 margin: 56
 }
@@ -16,5 +28,5 @@ margin: 56
 
 .card {
   padding: 2em;
-}
+}*/
 

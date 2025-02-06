@@ -1,6 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
 import { useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
+import { saveAuthToken } from "../auth/authUtils";
 
 const REGISTER_MUTATION = gql`
   mutation Register($username: String!, $password: String!) {
@@ -18,9 +19,9 @@ const RegisterComponent = () => {
     const [register, { loading }] = useMutation(REGISTER_MUTATION, {
         onCompleted: (data) => {
              
-            const token = data.login.token;
+            const token = data.register.token;
               
-            sessionStorage.setItem("auth-token", token);
+            saveAuthToken(token);
         
             },
             onError: (err) => {
@@ -42,14 +43,14 @@ const RegisterComponent = () => {
           };
 
     return (
-        <div>
-            <Container className="d-flex justify-content-center align-items-center min-vh-100">
+        
+            <Container className="justify-content-center align-items-center w-25">
                 <Row className="w-100">
                     <Col xs={12} md={12} lg={12} className="custom-container">
-                    <div className="">
+                    <div>
                         <h2 className="text-center mb-5">Register</h2>
                             <Form onSubmit={handleRegister} className="flex flex-col">
-                                <InputGroup className="mb-3">
+                                <InputGroup className="mb-3 ">
                                     <Form.Control
                                         type="username"
                                         placeholder="username"
@@ -81,7 +82,7 @@ const RegisterComponent = () => {
                     </Col>
                 </Row>
             </Container>
-        </div>
+        
     )
 }
 
