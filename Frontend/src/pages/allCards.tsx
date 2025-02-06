@@ -5,21 +5,28 @@ import Pagination from 'react-bootstrap/Pagination';
 import { Card, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css'
+import { Link } from "react-router-dom";
 
-// const GET_CHARACTERS = graphql(`#gql
 const GET_CHARACTERS = gql`
-query characters($page: Int){
-  characters(page: $page) {
-      info {
-      pages
-    }
-    results {
+query GetPosts {
+    getPosts {
+    code
+    success
+    message
+    posts {
       id
-      name
-      status
-      gender
-      image
+      content
+      author {
+        username
+      }
+      comments {
+        content
+        author {
+          username
+        }
+      }
     }
+
   }
 }
 `;
@@ -64,17 +71,20 @@ function AllCardsComponents() {
       </div>
       <br></br>
       <Row xs={1} sm={2} md={3} lg={4} xl={4} className="g-3">
-        {data.characters.results.map((character: any) => (
-          <Col key={character.id}>
+        {data.getPosts.posts.map((post: any) => (
+          <Col key={post.id}>
             <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top" src={character.image} />
+              <Card.Header>{post.author.username}</Card.Header>
               <Card.Body>
-                <Card.Title>{character.name}</Card.Title>
-                <Card.Text>
-                  <b>Statut: </b>{character.status} <br></br>
-                  <b>Gender: </b>{character.gender}
-                </Card.Text>
+                <Card.Text>{post.content}</Card.Text>
               </Card.Body>
+              <Card.Footer>
+                <p>
+                  <span><b>Comments:</b> {post.comments.length}</span>
+                  <span style={{ marginLeft: "10px" }}><b>Likes:</b> 8</span>
+                </p>
+                <Link to={`/post/${post.id}`}>Voir plus</Link>
+              </Card.Footer>
             </Card>
           </Col>
         ))}

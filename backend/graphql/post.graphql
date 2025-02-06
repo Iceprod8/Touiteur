@@ -21,8 +21,8 @@ query GetPosts {
 }
 
 # 📜 Query : Récupérer un post grace a son id
-query GetPostsById($id: ID!) {
-  getPostsUser(id: $id) {
+query GetPostsById($getPostByIdId: ID!) {
+  getPostsUser(id: $getPostByIdId) {
     code
     message
     success

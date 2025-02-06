@@ -3,48 +3,52 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import { Card } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { FaHeart, FaComment } from "react-icons/fa";
 
 const GET_POST_BY_ID = gql`
-query characters($page: Int){
-  characters(page: $page) {
-      info {
-      pages
-    }
-    results {
-      id
-      name
-      status
-      gender
-      image
+query GetPostById($id: ID!) {
+  getPostById(id: $id) {
+    code
+    message
+    success
+    post {
+      content
+      author {
+        username
+      }
+      comments {
+        content
+        author {
+          username
+        }
+      }
     }
   }
 }
 `;
 
 const COMMENT_MUTATION = gql`
-  mutation Comment($comment: String!) {
-    comment(comment: $comment) {
-      token
-    }
+mutation Mutation($content: String!, $postId: ID!) {
+  createComment(content: $content, postId: $postId) {
+    code
   }
+}
 `;
 
 function PostComponent() {
     const { id } = useParams();
+    console.log(id);
     const { loading, error, data } = useQuery(GET_POST_BY_ID, {
         variables: { id },
+        skip: !id
     });
-
-    if (loading) return <p>Chargement...</p>;
-    if (error) return <p>Erreur: {error.message}</p>;
-
-    const post = data.post;
+    console.log(data);
 
     const [newComment, setNewComment] = useState("");
     const [errorComment, setErrorComment] = useState<string | null>(null);
 
-    const [register] = useMutation(COMMENT_MUTATION, {
+    const [comment] = useMutation(COMMENT_MUTATION, {
         onError: (err) => {
             setErrorComment("Register didn't work: " + err.message);
         }
@@ -56,30 +60,59 @@ function PostComponent() {
             setErrorComment("Missing comment");
             return;
         }
-        register({ variables: { newComment } });
+        comment({ variables: { newComment, id } });
     };
 
+    if (loading) return <p>Chargement...</p>;
+    if (error) return <p>Erreur: {error.message}</p>;
+
     return (
-        <div>
-            <Card style={{ width: "24rem", margin: "auto" }}>
-                <Card.Header>{post.user.username}</Card.Header>
+        <div className="d-flex justify-content-center mt-4">
+            <Card style={{ width: "40rem", borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
+                {/* Post principal */}
+                <Card.Header className="d-flex align-items-center bg-white">
+                    <img 
+                        src="https://random.imagecdn.app/500/150"
+                        alt="profile" 
+                        className="rounded-circle me-2"
+                        width="40"
+                        height="40"
+                    />
+                    <b>{data.getPostById.post.author.username}</b>
+                </Card.Header>
                 <Card.Body>
-                    <Card.Text>{post.content}</Card.Text>
+                    <Card.Text>{data.getPostById.post.content}</Card.Text>
                 </Card.Body>
-                <Card.Footer>
-                    <p>
-                        <b>comments: </b>{post.comments.length} <br />
-                        <b>likes: </b>{post.likes}
-                    </p>
-                    {data.post.results.comments.map((comment: any) => (
-                        <div>
-                            <h3>{comment.user.username}</h3>
-                            <p>{comment.content}</p>
-                            <p><b>likes: </b>{post.likes.length}</p>
-                        </div>
-                    ))}
+                <Card.Footer className="d-flex justify-content-between align-items-center bg-white">
+                    <span className="d-flex align-items-center">
+                        <FaComment className="text-primary me-1" /> {data.getPostById.post.comments.length}
+                    </span>
+                    <span className="d-flex align-items-center">
+                        <FaHeart className="text-danger me-1" /> 3 {/* {post.likes} */}
+                    </span>
                 </Card.Footer>
             </Card>
+
+            {/* Liste des commentaires */}
+            <div className="mt-3" style={{ width: "40rem" }}>
+                {data.getPostById.post.comments.map((comment: any, index: number) => (
+                    <Card key={index} className="mb-2 p-2" style={{ borderLeft: "4px solid #007bff", borderRadius: "8px" }}>
+                        <div className="d-flex align-items-center">
+                            <img 
+                                src="https://random.imagecdn.app/500/150"
+                                alt="profile" 
+                                className="rounded-circle me-2"
+                                width="30"
+                                height="30"
+                            />
+                            <b>{comment.author.username}</b>
+                        </div>
+                        <p className="mt-1 mb-0">{comment.content}</p>
+                    </Card>
+                ))}
+            </div>
+
+            {/* Formulaire de commentaire */}
             <div
                 style={{
                     position: "fixed",
