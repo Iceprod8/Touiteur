@@ -17,6 +17,7 @@ export const typeDefs = gql`
 
     getAllLikes: GetLikesResponse
     getUserLikes(userId: ID!): GetLikesResponse
+    getFamousLikes: GetFamousLikesResponse
   }
 
   type Mutation {
@@ -116,5 +117,13 @@ export const typeDefs = gql`
     message: String!
     likedPosts: [Post]!
     likedComments: [Comment]!
+  }
+
+  type GetFamousLikesResponse {
+    code: Int!
+    success: Boolean!
+    message: String!
+    famousPosts: [Post]!
+    famousComments: [Comment]!
   }
 `;
