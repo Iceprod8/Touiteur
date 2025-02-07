@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -30,23 +30,29 @@ const LoginComponent = () => {
         throw new Error("AuthContext must be used within an AuthProvider");
       }
 
-    const { login } = authContext;
+    const { user, login } = authContext;
 
     const [loginMutation, { loading }] = useMutation(LOGIN_MUTATION, {
-        onCompleted: (data) => {
-            console.log(data);
-            if (data.signIn.success) {
-                const token = data.signIn.token;
-                login(token);
-                navigate("/");
-            } else {
-                setError("Login didn't work: " + data.signIn.message);
-            }
+        onCompleted: async (data) => {
+            
+          if (data.signIn.success) {
+            const token = data.signIn.token;
+            await login(token);
+          } else {
+            setError("Login failed: " + data.signIn.message);
+          }
         },
         onError: (err) => {
-            setError("Login didn't work: " + err.message);
+          setError("Login failed: " + err.message);
+        },
+      });
+    
+      useEffect(() => {
+        if (user) {
+          console.log("User logged in, navigating...");
+          navigate("/");
         }
-    });
+      }, [user, navigate]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();

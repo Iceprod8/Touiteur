@@ -1,5 +1,5 @@
 import { gql, useMutation } from "@apollo/client";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
@@ -30,22 +30,31 @@ const RegisterComponent = () => {
         throw new Error("AuthContext must be used within an AuthProvider");
       }
 
-    const { login } = authContext;
+    const { user, login } = authContext;
 
     const [register, { loading }] = useMutation(REGISTER_MUTATION, {
-        onCompleted: (data) => {
+        onCompleted: async (data) => {
              
             const token = data.createUser.token;
             if (login) {
-                login(token);
+                await login(token);
             }
-            navigate('/');
+            else {
+                setError("Login failed: " + data.signIn.message);
+            }
 
             },
             onError: (err) => {
                 setError("Register didn't work: " + err.message);
             }
           });
+
+          useEffect(() => {
+                  if (user) {
+                    console.log("User logged in, navigating...");
+                    navigate("/");
+                  }
+                }, [user, navigate]);
     
         const handleRegister = async (e: React.FormEvent) => {
             e.preventDefault();
