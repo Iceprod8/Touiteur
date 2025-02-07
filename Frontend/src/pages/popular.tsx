@@ -44,7 +44,7 @@ function PopularComponent() {
   return (
     <div>
       <br></br>
-      <h1>All characters</h1>
+      <h1>Populaires</h1>
       <br></br>
       <div className='pagination'>
       </div>

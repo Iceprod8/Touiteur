@@ -6,7 +6,6 @@ import './App.css';
 import NavbarComponent from './navbar';
 import AllCardsComponents from './pages/allCards';
 import PopularComponent from './pages/popular';
-import RecentComponent from './pages/recent';
 import LoginComponent from './pages/login';
 import SearchComponent from './pages/search';
 import PostComponent from './pages/post'
@@ -58,7 +57,6 @@ function App() {
           <Route element={<PrivateRoute redirectTo="/login" />}>
             <Route path="/" element={<AllCardsComponents />} />
             <Route path="/popular" element={<PopularComponent />} />
-            <Route path="/recent" element={<RecentComponent />} />
             <Route path="/search" element={<SearchComponent />} />
             <Route path="/profile" element={<ProfileComponent />} />
             <Route path="/post/:id" element={<PostComponent />} />
