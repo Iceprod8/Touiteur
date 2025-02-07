@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, ApolloLink} from '@apollo/client';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
-import { useState } from 'react';
+import { useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import NavbarComponent from './navbar';
@@ -12,17 +12,18 @@ import SearchComponent from './pages/search';
 import PostComponent from './pages/post'
 import ProfileComponent from './pages/Profile';
 import RegisterComponent from './pages/register';
-import { getAuthToken, logout } from './auth/authUtils';
+import AuthProvider, { AuthContext } from './context/AuthContext';
+import PrivateRoute from './auth/PrivateRoute';
 
 const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' });
 
 const authLink = new ApolloLink((operation, forward) => {
 
-  const token = getAuthToken();
+  const token = sessionStorage.getItem('token');
 
   operation.setContext({
     headers: {
-      authorization: token ? `Bearer ${token}` : ''
+      Authorization: token ? `Bearer ${token}` : ''
     }
   });
 
@@ -35,30 +36,35 @@ const client = new ApolloClient({
 });
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const [username, setUsername] = useState("clem");
+  const authContext = useContext(AuthContext);
+
+  if (!authContext) {
+    throw new Error("AuthContext must be used within an AuthProvider");
+  }
+
+  const { user, logout } = authContext;
   const navigate = useNavigate();
 
-  const handleLogin = () => setIsLoggedIn(true);
   const handleLogout = () => {
-    logout();
-    setIsLoggedIn(false);
-    navigate('/login');
+    logout(); 
+    navigate('/login'); 
   };
 
   return (
     <div>
-        <NavbarComponent isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} />
+        <NavbarComponent isLoggedIn={!!user} onLogout={handleLogout} />
         <Routes>
-          <Route path="/" element={<AllCardsComponents />}/>
-          <Route path="/popular" element={<PopularComponent />}/>
-          <Route path="/recent" element={<RecentComponent />}/>
-          <Route path="/login" element={<LoginComponent />}/>
-          <Route path="/search" element={<SearchComponent />}/>
-          <Route path="/profile" element={<ProfileComponent />}/>
-          <Route path="/post/:id" element={<PostComponent />} />
-          <Route path="/register" element={<RegisterComponent />}/>
+          <Route element={<PrivateRoute redirectTo="/login" />}>
+            <Route path="/" element={<AllCardsComponents />} />
+            <Route path="/popular" element={<PopularComponent />} />
+            <Route path="/recent" element={<RecentComponent />} />
+            <Route path="/search" element={<SearchComponent />} />
+            <Route path="/profile" element={<ProfileComponent />} />
+            <Route path="/post/:id" element={<PostComponent />} />
+          </Route>
+          <Route path="/login" element={<LoginComponent />} />
+          <Route path="/register" element={<RegisterComponent />} />
         </Routes>
     </div>
   );
@@ -69,9 +75,11 @@ function App() {
 export default function AppWrapper() {
   return (
     <ApolloProvider client={client}>
-      <Router>
-        <App />
-      </Router>
+      <AuthProvider>
+        <Router>
+          <App />
+        </Router>
+      </AuthProvider>
     </ApolloProvider>
   );
 }

@@ -12,6 +12,7 @@ import {
   getUsers,
   getUserById,
   getUserByName,
+  getUserFromJWT,
 } from "./resolvers/querys/userQuery.js";
 
 /*
@@ -63,6 +64,7 @@ export const resolvers: Resolvers = {
     getUsers,
     getUserByName,
     getUserById,
+    getUserFromJWT,
 
     getPosts,
     getPostById,

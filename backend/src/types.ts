@@ -197,8 +197,9 @@ export type Query = {
   getPostsUser?: Maybe<CrudPostsResponse>;
   getUserById?: Maybe<RuUserResponse>;
   getUserByName?: Maybe<RuUserResponse>;
+  getUserFromJWT?: Maybe<RuUserResponse>;
   getUserLikes?: Maybe<GetLikesResponse>;
-  getUsers: Array<Maybe<User>>;
+  getUsers?: Maybe<Array<User>>;
 };
 
 
@@ -475,8 +476,9 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
   getPostsUser?: Resolver<Maybe<ResolversTypes['CRUDPostsResponse']>, ParentType, ContextType, RequireFields<QueryGetPostsUserArgs, 'userId'>>;
   getUserById?: Resolver<Maybe<ResolversTypes['RUUserResponse']>, ParentType, ContextType, RequireFields<QueryGetUserByIdArgs, 'id'>>;
   getUserByName?: Resolver<Maybe<ResolversTypes['RUUserResponse']>, ParentType, ContextType, RequireFields<QueryGetUserByNameArgs, 'username'>>;
+  getUserFromJWT?: Resolver<Maybe<ResolversTypes['RUUserResponse']>, ParentType, ContextType>;
   getUserLikes?: Resolver<Maybe<ResolversTypes['GetLikesResponse']>, ParentType, ContextType, RequireFields<QueryGetUserLikesArgs, 'userId'>>;
-  getUsers?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>;
+  getUsers?: Resolver<Maybe<Array<ResolversTypes['User']>>, ParentType, ContextType>;
 };
 
 export type RuUserResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['RUUserResponse'] = ResolversParentTypes['RUUserResponse']> = {

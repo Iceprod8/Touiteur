@@ -6,11 +6,10 @@ import Button from "react-bootstrap/Button";
 
 interface NavbarInterface {
   isLoggedIn: boolean;
-  username?: string;
   onLogout: () => void ;
 }
 
-function NavbarComponent({ isLoggedIn, username, onLogout }: NavbarInterface) {
+function NavbarComponent({ isLoggedIn, onLogout }: NavbarInterface) {
   const location = useLocation();
 
   return (
@@ -27,7 +26,7 @@ function NavbarComponent({ isLoggedIn, username, onLogout }: NavbarInterface) {
 
         {isLoggedIn ? (
           <>
-            <span style={{ color: "white", marginRight: "10px" }}>👤 {username}</span>
+            <span style={{ color: "white", marginRight: "10px" }}>👤</span>
             <Button variant="outline-light" onClick={onLogout}>Logout</Button>
           </>
         ) : (

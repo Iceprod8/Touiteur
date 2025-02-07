@@ -78,3 +78,33 @@ export const getUserById: QueryResolvers["getUserById"] = async (
     };
   }
 };
+
+export const getUserFromJWT: QueryResolvers["getUserFromJWT"] = async (
+  _,
+  __,
+  { dataSources, user }
+) => {
+  try {
+    if (!user || !user.id)
+      throw new Error(
+        "L'utilisateur doit être authentifié pour accéder à cette requête."
+      );
+
+    const authenticatedUser = await dataSources.db.user.findUnique({
+      where: { id: user.id },
+    });
+    if (!authenticatedUser)
+      throw new Error("Utilisateur authentifié introuvable.");
+
+    return {
+      code: 200,
+      success: true,
+      message: "Utilisateur authentifié récupéré avec succès.",
+      user: authenticatedUser,
+    };
+  } catch (error) {
+    throw new Error(
+      `Erreur lors de la récupération de l'utilisateur authentifié: ${error}`
+    );
+  }
+};
