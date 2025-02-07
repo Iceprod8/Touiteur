@@ -1,7 +1,8 @@
 import { gql, useMutation } from "@apollo/client";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
-import { saveAuthToken } from "../auth/authUtils";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const REGISTER_MUTATION = gql`
   mutation CreateUser($username: String!, $password: String!) {
@@ -12,27 +13,48 @@ const REGISTER_MUTATION = gql`
     }
     success
     message
+    token
   }
 }
 `;
 
 const RegisterComponent = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [passwordConfirm, setPasswordConfirm] = useState("");
+    const [username, setUsername] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [passwordConfirm, setPasswordConfirm] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
+    const authContext = useContext(AuthContext);
+
+    if (!authContext) {
+        throw new Error("AuthContext must be used within an AuthProvider");
+      }
+
+    const { user, login } = authContext;
+
     const [register, { loading }] = useMutation(REGISTER_MUTATION, {
-        onCompleted: (data) => {
+        onCompleted: async (data) => {
              
-            const token = data.register.token;
-              
-            saveAuthToken(token);
-        
+            const token = data.createUser.token;
+            if (login) {
+                await login(token);
+            }
+            else {
+                setError("Login failed: " + data.signIn.message);
+            }
+
             },
             onError: (err) => {
                 setError("Register didn't work: " + err.message);
             }
           });
+
+          useEffect(() => {
+                  if (user) {
+                    console.log("User logged in, navigating...");
+                    navigate("/");
+                  }
+                }, [user, navigate]);
     
         const handleRegister = async (e: React.FormEvent) => {
             e.preventDefault();

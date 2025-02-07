@@ -3,18 +3,26 @@ import { MutationResolvers } from "../../types.js";
 
 export const createComment: MutationResolvers["createComment"] = async (
   _,
-  { authorId, content, postId },
-  { dataSources }: DataSourceContext
+  { content, postId },
+  { dataSources, user }: DataSourceContext
 ) => {
   try {
+    if (!user) {
+      return {
+        code: 401,
+        message: "Authentification requise",
+        success: false,
+        user: null,
+      };
+    }
     const author = await dataSources.db.user.findUnique({
-      where: { id: authorId },
+      where: { id: user.id },
     });
     if (!author)
       throw new Error("❌ Auteur introuvable. Vérifiez l'ID et réessayez.");
 
     const newComment = await dataSources.db.comment.create({
-      data: { authorId, content, postId },
+      data: { authorId: user.id, content, postId },
     });
     return {
       code: 201,
@@ -34,11 +42,19 @@ export const createComment: MutationResolvers["createComment"] = async (
 export const deleteComment: MutationResolvers["deleteComment"] = async (
   _,
   { id },
-  { dataSources }: DataSourceContext
+  { dataSources, user }: DataSourceContext
 ) => {
   try {
+    if (!user) {
+      return {
+        code: 401,
+        message: "Authentification requise",
+        success: false,
+        user: null,
+      };
+    }
     const commentToDelete = await dataSources.db.comment.findUnique({
-      where: { id },
+      where: { id, authorId: user.id },
     });
     if (!commentToDelete)
       throw new Error("❌ Comment introuvable. Vérifiez l'ID et réessayez.");
@@ -62,11 +78,19 @@ export const deleteComment: MutationResolvers["deleteComment"] = async (
 export const updateComment: MutationResolvers["updateComment"] = async (
   _,
   { id, content },
-  { dataSources }: DataSourceContext
+  { dataSources, user }: DataSourceContext
 ) => {
   try {
+    if (!user) {
+      return {
+        code: 401,
+        message: "Authentification requise",
+        success: false,
+        user: null,
+      };
+    }
     const commentToUpdate = await dataSources.db.comment.findUnique({
-      where: { id },
+      where: { id, authorId: user.id },
     });
     if (!commentToUpdate)
       throw new Error("❌ Comment introuvable. Vérifiez l'ID et réessayez.");

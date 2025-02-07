@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuthToken, saveAuthToken } from "../auth/authUtils";
+import { AuthContext } from "../context/AuthContext";
 
 const LOGIN_MUTATION = gql`
   mutation SignIn($username: String!, $password: String!) {
@@ -17,40 +17,51 @@ const LOGIN_MUTATION = gql`
 }
 `;
 
-const LoginComponent = ({ onLogin }: {onLogin: () => void}) => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+const LoginComponent = () => {
+    const [username, setUsername] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
 
-    const [login, { loading }] = useMutation(LOGIN_MUTATION, {
-        onCompleted: (data) => {
-            console.log(data);
-    
-            if (data.signIn.success) {
-                const token = data.signIn.token;
-                saveAuthToken(token);
-                sessionStorage.setItem("username", username);
-    
-                onLogin();                  
-            } else {
-                setError("Login didn't work: " + data.signIn.message);
-            }
+    const authContext = useContext(AuthContext);
+    const navigate = useNavigate();
+
+
+    if (!authContext) {
+        throw new Error("AuthContext must be used within an AuthProvider");
+      }
+
+    const { user, login } = authContext;
+
+    const [loginMutation, { loading }] = useMutation(LOGIN_MUTATION, {
+        onCompleted: async (data) => {
+            
+          if (data.signIn.success) {
+            const token = data.signIn.token;
+            await login(token);
+          } else {
+            setError("Login failed: " + data.signIn.message);
+          }
         },
         onError: (err) => {
-            setError("Login didn't work: " + err.message);
-        }
-    });
+          setError("Login failed: " + err.message);
+        },
+      });
     
+      useEffect(() => {
+        if (user) {
+          console.log("User logged in, navigating...");
+          navigate("/");
+        }
+      }, [user, navigate]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!username || !password) {
-            setError("Missing data");
+            setError("Missing username and/or password");
             return;
         }
-        login({ variables: { username, password } });
-    };
-
+        loginMutation({ variables: { username, password } });
+    };       
 
     return (
         <div>

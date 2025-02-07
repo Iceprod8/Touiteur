@@ -12,6 +12,7 @@ import {
   getUsers,
   getUserById,
   getUserByName,
+  getUserFromJWT,
 } from "./resolvers/querys/userQuery.js";
 
 /*
@@ -52,13 +53,18 @@ import {
   unlikeComment,
   unlikePost,
 } from "./resolvers/mutations/likeMutation.js";
-import { getAllLikes, getUserLikes } from "./resolvers/querys/likeQuery.js";
+import {
+  getAllLikes,
+  getFamousLikes,
+  getUserLikes,
+} from "./resolvers/querys/likeQuery.js";
 
 export const resolvers: Resolvers = {
   Query: {
     getUsers,
     getUserByName,
     getUserById,
+    getUserFromJWT,
 
     getPosts,
     getPostById,
@@ -71,6 +77,7 @@ export const resolvers: Resolvers = {
 
     getAllLikes,
     getUserLikes,
+    getFamousLikes,
   },
 
   Mutation: {
@@ -124,8 +131,12 @@ export const resolvers: Resolvers = {
         where: { postId: id },
       });
     },
-    likedBy: ({ authorId }, _, { dataSources }) => {
-      return dataSources.db.user.findMany({ where: { id: authorId } });
+    likedBy: async ({ id }, _, { dataSources }) => {
+      return dataSources.db.user.findMany({
+        where: {
+          likedPosts: { some: { id } },
+        },
+      });
     },
   },
 
@@ -133,8 +144,12 @@ export const resolvers: Resolvers = {
     author: ({ authorId }, _, { dataSources }) => {
       return dataSources.db.user.findUniqueOrThrow({ where: { id: authorId } });
     },
-    likedBy: ({ authorId }, _, { dataSources }) => {
-      return dataSources.db.user.findMany({ where: { id: authorId } });
+    likedBy: async ({ id }, _, { dataSources }) => {
+      return dataSources.db.user.findMany({
+        where: {
+          likedComments: { some: { id } },
+        },
+      });
     },
   },
 };
