@@ -19,7 +19,42 @@ export const getAllLikes: QueryResolvers["getAllLikes"] = async (
     };
   } catch (error) {
     throw new Error(
-      `⚠️ Erreur lors de la récupération des likes: ${(error as Error).message}`
+      `❌ Impossible de récupérer tous les likes: ${(error as Error).message}`
+    );
+  }
+};
+
+export const getFamousLikes: QueryResolvers["getFamousLikes"] = async (
+  _,
+  __,
+  { dataSources }: DataSourceContext
+) => {
+  try {
+    const famousPosts = await dataSources.db.post.findMany({
+      where: { likedBy: { some: {} } },
+      orderBy: { likedBy: { _count: "desc" } },
+      take: 10,
+    });
+    const famousComments = await dataSources.db.comment.findMany({
+      where: { likedBy: { some: {} } },
+      orderBy: { likedBy: { _count: "desc" } },
+      take: 10,
+    });
+
+    console.log(famousComments[0]);
+
+    return {
+      code: 200,
+      success: true,
+      message: "✅ Posts et commentaires populaires récupérés avec succès.",
+      famousPosts,
+      famousComments,
+    };
+  } catch (error) {
+    throw new Error(
+      `❌ Impossible de récupérer les likes populaires: ${
+        (error as Error).message
+      }`
     );
   }
 };
@@ -32,16 +67,10 @@ export const getUserLikes: QueryResolvers["getUserLikes"] = async (
   try {
     const user = await dataSources.db.user.findUnique({
       where: { id: userId },
-      include: {
-        likedPosts: true,
-        likedComments: true,
-      },
+      include: { likedPosts: true, likedComments: true },
     });
 
-    if (!user)
-      throw new Error(
-        "❌ Utilisateur introuvable. Vérifiez l'ID et réessayez."
-      );
+    if (!user) throw new Error("⚠️ Utilisateur introuvable. Vérifiez l'ID.");
 
     return {
       code: 200,
@@ -52,7 +81,7 @@ export const getUserLikes: QueryResolvers["getUserLikes"] = async (
     };
   } catch (error) {
     throw new Error(
-      `⚠️ Erreur lors de la récupération des likes de l'utilisateur: ${
+      `❌ Impossible de récupérer les likes de l'utilisateur: ${
         (error as Error).message
       }`
     );

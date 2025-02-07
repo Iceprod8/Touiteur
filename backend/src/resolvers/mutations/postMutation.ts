@@ -3,18 +3,26 @@ import { MutationResolvers } from "../../types.js";
 
 export const createPost: MutationResolvers["createPost"] = async (
   _,
-  { authorId, content },
-  { dataSources }: DataSourceContext
+  { content },
+  { dataSources, user }: DataSourceContext
 ) => {
   try {
+    if (!user) {
+      return {
+        code: 401,
+        message: "Authentification requise",
+        success: false,
+        user: null,
+      };
+    }
     const author = await dataSources.db.user.findUnique({
-      where: { id: authorId },
+      where: { id: user.id },
     });
     if (!author)
       throw new Error("❌ Auteur introuvable. Vérifiez l'ID et réessayez.");
 
     const newPost = await dataSources.db.post.create({
-      data: { authorId, content },
+      data: { authorId: user.id, content },
     });
     return {
       code: 201,
@@ -32,14 +40,24 @@ export const createPost: MutationResolvers["createPost"] = async (
 export const deletePost: MutationResolvers["deletePost"] = async (
   _,
   { id },
-  { dataSources }: DataSourceContext
+  { dataSources, user }: DataSourceContext
 ) => {
   try {
+    if (!user) {
+      return {
+        code: 401,
+        message: "Authentification requise",
+        success: false,
+        user: null,
+      };
+    }
     const postToDelete = await dataSources.db.post.findUnique({
-      where: { id },
+      where: { id, authorId: user.id },
     });
     if (!postToDelete)
       throw new Error("❌ Post introuvable. Vérifiez l'ID et réessayez.");
+    
+    await dataSources.db.comment.deleteMany({ where: { postId:postToDelete.id } });
 
     await dataSources.db.post.delete({ where: { id } });
     return {
@@ -58,11 +76,20 @@ export const deletePost: MutationResolvers["deletePost"] = async (
 export const updatePost: MutationResolvers["updatePost"] = async (
   _,
   { id, content },
-  { dataSources }: DataSourceContext
+  { dataSources, user }: DataSourceContext
 ) => {
   try {
+    if (!user) {
+      return {
+        code: 401,
+        message: "Authentification requise",
+        success: false,
+        user: null,
+      };
+    }
     const postToUpdate = await dataSources.db.post.findUnique({
-      where: { id },
+      where: { id, authorId: user.id },
+      include: { author: true },
     });
     if (!postToUpdate)
       throw new Error("❌ Post introuvable. Vérifiez l'ID et réessayez.");
@@ -70,6 +97,7 @@ export const updatePost: MutationResolvers["updatePost"] = async (
     const updatedPost = await dataSources.db.post.update({
       where: { id },
       data: { content },
+      include: { author: true },
     });
     return {
       code: 200,
