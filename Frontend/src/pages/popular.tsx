@@ -1,62 +1,62 @@
-import { useQuery, gql } from '@apollo/client';
+// import { useQuery, gql } from '@apollo/client';
 
-import { useState } from 'react';
-import Pagination from 'react-bootstrap/Pagination';
-import { Card, Row, Col } from 'react-bootstrap';
+// import { useState } from 'react';
+// import Pagination from 'react-bootstrap/Pagination';
+// import { Card, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css'
 
 function PopularComponent() {
 
-  // const GET_CHARACTERS = graphql(`#gql
-    const GET_POPULAR = gql`
-    query characters($page: Int){
-    characters(page: $page) {
-        info {
-        pages
-        }
-        results {
-        id
-        name
-        status
-        gender
-        image
-        }
-    }
-    }
-    `;
+  // // const GET_CHARACTERS = graphql(`#gql
+  //   const GET_POPULAR = gql`
+  //   query characters($page: Int){
+  //   characters(page: $page) {
+  //       info {
+  //       pages
+  //       }
+  //       results {
+  //       id
+  //       name
+  //       status
+  //       gender
+  //       image
+  //       }
+  //   }
+  //   }
+  //   `;
 
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
 
-  const { loading, error, data } = useQuery(GET_POPULAR, {
-    variables: { page }
-  });
+  // const { loading, error, data } = useQuery(GET_POPULAR, {
+  //   variables: { page }
+  // });
 
-  console.log(data);
+  // console.log(data);
 
-  let active = page;
+  // let active = page;
 
-  function next(page: number) {
-    if (page <= data.characters.info.pages) {
-      setPage(page);
-    }
-  }
+  // function next(page: number) {
+  //   if (page <= data.characters.info.pages) {
+  //     setPage(page);
+  //   }
+  // }
 
-  function prev(page: number) {
-    if (page > 0) {
-      setPage(page);
-    }
-  }
+  // function prev(page: number) {
+  //   if (page > 0) {
+  //     setPage(page);
+  //   }
+  // }
 
-  if (loading) return <h1>Chargement...</h1>;
-  if (error) return <h1>Erreur: {error.message}</h1>;
+  // if (loading) return <h1>Chargement...</h1>;
+  // if (error) return <h1>Erreur: {error.message}</h1>;
 
   return (
     <div>
       <br></br>
       <h1>All characters</h1>
       <br></br>
-      <div className='pagination'>
+      {/* <div className='pagination'>
         <Pagination>
           <Pagination.Prev onClick={() => prev(active - 1)} />
           <Pagination.Item active>{active}</Pagination.Item>
@@ -79,7 +79,7 @@ function PopularComponent() {
             </Card>
           </Col>
         ))}
-      </Row>
+      </Row> */}
     </div>
 
   );

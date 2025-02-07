@@ -19,8 +19,10 @@ query User($username: String!) {
           id
           username
         }
-        authorId
         id
+        likedBy{
+            username
+        }
         content
         comments {
           id
@@ -92,8 +94,8 @@ function SearchComponent() {
                                     <Card.Footer>
                                         <p>
                                             <b>comments: </b>{post.comments.length} <br />
-                                            <b>likes: </b> 4
-                                            {/* {post.likes} */}
+                                            <b>likes: </b>
+                                            {post.likedBy.length}
                                         </p>
                                         <Link to={`/post/${post.id}`}>Voir plus</Link>
                                     </Card.Footer>

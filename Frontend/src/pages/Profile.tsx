@@ -1,12 +1,12 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
 
 const POST_MUTATION = gql`
-mutation CreatePost($content: String!, $authorId: ID!) {
-  createPost(content: $content, authorId: $authorId) {
+mutation CreatePost($content: String!) {
+  createPost(content: $content) {
     code
     success
     message
@@ -27,6 +27,9 @@ query GetPostsUser($userId: ID!) {
     message
     success
     posts {
+      likedBy{
+        username
+      }
       id
       author{
         username
@@ -86,7 +89,7 @@ function ProfileComponent() {
             setErrorPost("Missing data");
             return;
         }
-        createPost({ variables: { content, authorId: userId } });
+        createPost({ variables: { content } });
     };
 
     //supprimer un post

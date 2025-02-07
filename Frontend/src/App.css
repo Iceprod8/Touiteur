@@ -3,6 +3,8 @@
   margin: 0 auto;
   text-align: center;
   color: #212529;
+  margin-bottom: "60px";
+  margin-top: "80px"
 }
 
 .custom-link, .custom-link:hover {
