@@ -14,6 +14,9 @@ query GetPosts {
     success
     message
     posts {
+      likedBy{
+        username
+      }
       id
       content
       author {
@@ -81,7 +84,7 @@ function AllCardsComponents() {
               <Card.Footer>
                 <p>
                   <span><b>Comments:</b> {post.comments.length}</span>
-                  <span style={{ marginLeft: "10px" }}><b>Likes:</b> 8</span>
+                  <span style={{ marginLeft: "10px" }}><b>Likes:</b> {post.likedBy.length}</span>
                 </p>
                 <Link to={`/post/${post.id}`}>Voir plus</Link>
               </Card.Footer>

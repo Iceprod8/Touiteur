@@ -13,14 +13,21 @@ query GetPostById($id: ID!) {
     message
     success
     post {
+      likedBy{
+        username
+      }
       content
       author {
         username
       }
       comments {
+        id
         content
         author {
           username
+        }
+        likedBy{
+            username
         }
       }
     }
@@ -29,19 +36,43 @@ query GetPostById($id: ID!) {
 `;
 
 const COMMENT_MUTATION = gql`
-mutation Mutation($content: String!, $authorId: ID!, $postId: ID!) {
+mutation CreateComment($content: String!, $authorId: ID!, $postId: ID!) {
   createComment(content: $content, authorId: $authorId, postId: $postId) {
     code
+  }
+}
+`;
 
+const LIKE_MUTATION = gql`
+mutation Mutation($userId: ID!, $commentId: ID!) {
+  likeComment(userId: $userId, commentId: $commentId) {
+    comment {
+      likedBy {
+        id
+      }
+    }
+  }
+}
+`;
+
+const UNLIKE_MUTATION = gql`
+mutation UnlikeComment($userId: ID!, $commentId: ID!) {
+  unlikeComment(userId: $userId, commentId: $commentId) {
+    comment {
+      likedBy {
+        username
+      }
+    }
   }
 }
 `;
 
 function PostComponent() {
+    const userId = "6688d08e-750c-4e26-a293-82987423ad20";
     const { id } = useParams();
-    const authorId = "5c3cd9cc-eae3-4ea3-a1fb-d576616fde43";
     console.log(id);
-    const { loading, error, data } = useQuery(GET_POST_BY_ID, {
+
+    const { loading, error, data, refetch } = useQuery(GET_POST_BY_ID, {
         variables: { id },
         skip: !id
     });
@@ -49,10 +80,15 @@ function PostComponent() {
 
     const [newComment, setNewComment] = useState("");
     const [errorComment, setErrorComment] = useState<string | null>(null);
+    const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
 
+    //ajouter un commentaire
     const [comment] = useMutation(COMMENT_MUTATION, {
         onError: (err) => {
             setErrorComment("Register didn't work: " + err.message);
+        },
+        onCompleted: () => {
+            refetch();
         }
     });
 
@@ -62,14 +98,43 @@ function PostComponent() {
             setErrorComment("Missing comment");
             return;
         }
-        comment({ variables: { content: newComment, authorId, postId: id } });
+        comment({ variables: { content: newComment, authorId: userId, postId: id } });
+    };
+
+    //liker/unliker un commentaire
+    const [like] = useMutation(LIKE_MUTATION, {
+        onError: (err) => {
+            setErrorComment("Register didn't work: " + err.message);
+        }
+    });
+
+    const [unlike] = useMutation(UNLIKE_MUTATION, {
+        onError: (err) => {
+            setErrorComment("Register didn't work: " + err.message);
+        }
+    });
+
+    const handleLike = (commentId: string) => {
+        const isLiked = likedComments[commentId];
+    
+        setLikedComments(prev => ({
+            ...prev,
+            [commentId]: !isLiked
+        }));
+
+        console.log(commentId);
+        if (isLiked) {
+            unlike({ variables: { userId, commentId } });
+        } else {
+            like({ variables: { userId, commentId } });
+        }
     };
 
     if (loading) return <p>Chargement...</p>;
     if (error) return <p>Erreur: {error.message}</p>;
 
     return (
-        <div className="d-flex justify-content-center mt-4">
+        <div className="d-flex flex-column align-items-center" style={{ marginBottom: "60px", marginTop: "80px" }}>
             <Card style={{ width: "40rem", borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
                 {/* Post principal */}
                 <Card.Header className="d-flex align-items-center bg-white">
@@ -90,7 +155,7 @@ function PostComponent() {
                         <FaComment className="text-primary me-1" /> {data.getPostById.post.comments.length}
                     </span>
                     <span className="d-flex align-items-center">
-                        <FaHeart className="text-danger me-1" /> 3 {/* {post.likes} */}
+                        <FaHeart className="text-danger me-1" /> {data.getPostById.post.likedBy.length}
                     </span>
                 </Card.Footer>
             </Card>
@@ -99,7 +164,7 @@ function PostComponent() {
             <div className="mt-3" style={{ width: "40rem" }}>
                 {data.getPostById.post.comments.map((comment: any, index: number) => (
                     <Card key={index} className="mb-2 p-2" style={{ borderLeft: "4px solid #007bff", borderRadius: "8px" }}>
-                        <div className="d-flex align-items-center">
+                        <Card.Header className="d-flex align-items-center">
                             <img 
                                 src="https://random.imagecdn.app/500/150"
                                 alt="profile" 
@@ -108,8 +173,18 @@ function PostComponent() {
                                 height="30"
                             />
                             <b>{comment.author.username}</b>
-                        </div>
-                        <p className="mt-1 mb-0">{comment.content}</p>
+                        </Card.Header>
+                        <Card.Body className="mt-1 mb-0">{comment.content}</Card.Body>
+                        <Card.Footer className="d-flex justify-content-between align-items-center bg-white">
+                        <span className="d-flex align-items-center">
+                            <FaHeart 
+                                className={likedComments[comment.id] ? "text-danger" : "text-secondary"} 
+                                style={{ cursor: "pointer" }} 
+                                onClick={() => handleLike(comment.id)}
+                            />
+                            <span className="ms-1">{likedComments[comment.id] ? comment.likedBy.length + 1: comment.likedBy.length} </span>
+                        </span>
+                    </Card.Footer>
                     </Card>
                 ))}
             </div>
