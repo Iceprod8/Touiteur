@@ -111,7 +111,7 @@ function ProfileComponent() {
 
     return (
         <div>
-            <Container className="d-flex justify-content-center align-items-center min-vh-100">
+            <Container className="d-flex justify-content-center align-items-center pb-4">
                 <Row className="w-100">
                     <Col xs={12} md={12} lg={12} className="custom-container">
                         <div className="">
@@ -134,6 +134,7 @@ function ProfileComponent() {
                     </Col>
                 </Row>
             </Container>
+            <h3 className="pb-4">Tous vos tweets</h3>
             <Row xs={1} sm={2} md={3} lg={4} xl={4} className="g-3">
                 {data?.getPostsUser?.posts?.map((post: any) => (
                     <Col key={post.id}>
@@ -158,7 +159,7 @@ function ProfileComponent() {
                             <Card.Footer>
                                 <p>
                                     <span><b>Comments:</b> {post.comments.length}</span>
-                                    <span style={{ marginLeft: "10px" }}><b>Likes:</b> 8</span>
+                                    <span style={{ marginLeft: "10px" }}><b>Likes:</b> {post.likedBy.length}</span>
                                 </p>
                                 <Link to={`/post/${post.id}`}>Voir plus</Link>
                             </Card.Footer>
