@@ -5,6 +5,7 @@ export const typeDefs = gql`
     getUsers: [User]!
     getUserById(id: ID!): RUUserResponse
     getUserByName(username: String!): RUUserResponse
+    getUserFromJWT: RUUserResponse
 
     getPosts: CRUDPostsResponse
     getPostById(id: ID!): CRUDPostResponse

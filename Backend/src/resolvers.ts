@@ -12,6 +12,7 @@ import {
   getUsers,
   getUserById,
   getUserByName,
+  getUserFromJWT,
 } from "./resolvers/querys/userQuery.js";
 
 /*
@@ -59,6 +60,7 @@ export const resolvers: Resolvers = {
     getUsers,
     getUserByName,
     getUserById,
+    getUserFromJWT,
 
     getPosts,
     getPostById,
@@ -132,6 +134,9 @@ export const resolvers: Resolvers = {
   Comment: {
     author: ({ authorId }, _, { dataSources }) => {
       return dataSources.db.user.findUniqueOrThrow({ where: { id: authorId } });
+    },
+    post: ({ postId }, _, { dataSources }) => {
+      return dataSources.db.post.findUniqueOrThrow({ where: { id: postId } });
     },
     likedBy: ({ authorId }, _, { dataSources }) => {
       return dataSources.db.user.findMany({ where: { id: authorId } });
