@@ -13,6 +13,7 @@ query GetPostById($id: ID!) {
     message
     success
     post {
+      id
       likedBy{
         username
       }
@@ -67,6 +68,22 @@ mutation UnlikeComment($userId: ID!, $commentId: ID!) {
 }
 `;
 
+const LIKE_POST_MUTATION = gql`
+mutation CreateComment($userId: ID!, $postId: ID!) {
+  likePost(userId: $userId, postId: $postId) {
+    code
+  }
+}
+`;
+
+const UNLIKE_POST_MUTATION = gql`
+mutation CreateComment($userId: ID!, $postId: ID!) {
+  unlikePost(userId: $userId, postId: $postId) {
+    code
+  }
+}
+`;
+
 function PostComponent() {
     const userId = "6688d08e-750c-4e26-a293-82987423ad20";
     const { id } = useParams();
@@ -81,6 +98,7 @@ function PostComponent() {
     const [newComment, setNewComment] = useState("");
     const [errorComment, setErrorComment] = useState<string | null>(null);
     const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
+    const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
 
     //ajouter un commentaire
     const [comment] = useMutation(COMMENT_MUTATION, {
@@ -101,6 +119,36 @@ function PostComponent() {
         comment({ variables: { content: newComment, authorId: userId, postId: id } });
     };
 
+    //liker/unliker un post
+    const [likePost] = useMutation(LIKE_POST_MUTATION, {
+        onError: (err) => {
+            setErrorComment("Register didn't work: " + err.message);
+        }
+    });
+
+    const [unlikePost] = useMutation(UNLIKE_POST_MUTATION, {
+        onError: (err) => {
+            setErrorComment("Register didn't work: " + err.message);
+        }
+    });
+
+    const handleLikePost = () => {
+        if (id) {
+            const isLiked = likedPosts[id];
+            setLikedPosts(prev => ({
+                ...prev,
+                [id]: !isLiked
+            }));
+
+            console.log(id);
+            if (isLiked) {
+                unlikePost({ variables: { userId, postId: id } });
+            } else {
+                likePost({ variables: { userId, postId: id } });
+            }
+        }
+    };
+
     //liker/unliker un commentaire
     const [like] = useMutation(LIKE_MUTATION, {
         onError: (err) => {
@@ -116,7 +164,7 @@ function PostComponent() {
 
     const handleLike = (commentId: string) => {
         const isLiked = likedComments[commentId];
-    
+
         setLikedComments(prev => ({
             ...prev,
             [commentId]: !isLiked
@@ -138,9 +186,9 @@ function PostComponent() {
             <Card style={{ width: "40rem", borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
                 {/* Post principal */}
                 <Card.Header className="d-flex align-items-center bg-white">
-                    <img 
+                    <img
                         src="https://random.imagecdn.app/500/150"
-                        alt="profile" 
+                        alt="profile"
                         className="rounded-circle me-2"
                         width="40"
                         height="40"
@@ -155,7 +203,12 @@ function PostComponent() {
                         <FaComment className="text-primary me-1" /> {data.getPostById.post.comments.length}
                     </span>
                     <span className="d-flex align-items-center">
-                        <FaHeart className="text-danger me-1" /> {data.getPostById.post.likedBy.length}
+                        <FaHeart
+                            className={likedPosts[data.getPostById.post.id] ? "text-danger" : "text-secondary"}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleLikePost()}
+                        />
+                        <span className="ms-1">{likedPosts[data.getPostById.post.id] ? data.getPostById.post.likedBy.length + 1 : data.getPostById.post.likedBy.length} </span>
                     </span>
                 </Card.Footer>
             </Card>
@@ -165,9 +218,9 @@ function PostComponent() {
                 {data.getPostById.post.comments.map((comment: any, index: number) => (
                     <Card key={index} className="mb-2 p-2" style={{ borderLeft: "4px solid #007bff", borderRadius: "8px" }}>
                         <Card.Header className="d-flex align-items-center">
-                            <img 
+                            <img
                                 src="https://random.imagecdn.app/500/150"
-                                alt="profile" 
+                                alt="profile"
                                 className="rounded-circle me-2"
                                 width="30"
                                 height="30"
@@ -176,15 +229,15 @@ function PostComponent() {
                         </Card.Header>
                         <Card.Body className="mt-1 mb-0">{comment.content}</Card.Body>
                         <Card.Footer className="d-flex justify-content-between align-items-center bg-white">
-                        <span className="d-flex align-items-center">
-                            <FaHeart 
-                                className={likedComments[comment.id] ? "text-danger" : "text-secondary"} 
-                                style={{ cursor: "pointer" }} 
-                                onClick={() => handleLike(comment.id)}
-                            />
-                            <span className="ms-1">{likedComments[comment.id] ? comment.likedBy.length + 1: comment.likedBy.length} </span>
-                        </span>
-                    </Card.Footer>
+                            <span className="d-flex align-items-center">
+                                <FaHeart
+                                    className={likedComments[comment.id] ? "text-danger" : "text-secondary"}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() => handleLike(comment.id)}
+                                />
+                                <span className="ms-1">{likedComments[comment.id] ? comment.likedBy.length + 1 : comment.likedBy.length} </span>
+                            </span>
+                        </Card.Footer>
                     </Card>
                 ))}
             </div>
