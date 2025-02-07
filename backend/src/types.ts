@@ -126,13 +126,11 @@ export type MutationDeletePostArgs = {
 
 export type MutationLikeCommentArgs = {
   commentId: Scalars['ID']['input'];
-  userId: Scalars['ID']['input'];
 };
 
 
 export type MutationLikePostArgs = {
   postId: Scalars['ID']['input'];
-  userId: Scalars['ID']['input'];
 };
 
 
@@ -144,13 +142,11 @@ export type MutationSignInArgs = {
 
 export type MutationUnlikeCommentArgs = {
   commentId: Scalars['ID']['input'];
-  userId: Scalars['ID']['input'];
 };
 
 
 export type MutationUnlikePostArgs = {
   postId: Scalars['ID']['input'];
-  userId: Scalars['ID']['input'];
 };
 
 
@@ -428,11 +424,11 @@ export type MutationResolvers<ContextType = DataSourceContext, ParentType extend
   createUser?: Resolver<Maybe<ResolversTypes['AuthUserResponse']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'password' | 'username'>>;
   deleteComment?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<MutationDeleteCommentArgs, 'id'>>;
   deletePost?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<MutationDeletePostArgs, 'id'>>;
-  likeComment?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<MutationLikeCommentArgs, 'commentId' | 'userId'>>;
-  likePost?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<MutationLikePostArgs, 'postId' | 'userId'>>;
+  likeComment?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<MutationLikeCommentArgs, 'commentId'>>;
+  likePost?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<MutationLikePostArgs, 'postId'>>;
   signIn?: Resolver<Maybe<ResolversTypes['AuthUserResponse']>, ParentType, ContextType, RequireFields<MutationSignInArgs, 'password' | 'username'>>;
-  unlikeComment?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<MutationUnlikeCommentArgs, 'commentId' | 'userId'>>;
-  unlikePost?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<MutationUnlikePostArgs, 'postId' | 'userId'>>;
+  unlikeComment?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<MutationUnlikeCommentArgs, 'commentId'>>;
+  unlikePost?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<MutationUnlikePostArgs, 'postId'>>;
   updateComment?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<MutationUpdateCommentArgs, 'content' | 'id'>>;
   updatePost?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<MutationUpdatePostArgs, 'content' | 'id'>>;
   updateUser?: Resolver<Maybe<ResolversTypes['RUUserResponse']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'password' | 'username'>>;
