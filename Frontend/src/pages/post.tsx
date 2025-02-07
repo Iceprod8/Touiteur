@@ -37,8 +37,8 @@ query GetPostById($id: ID!) {
 `;
 
 const COMMENT_MUTATION = gql`
-mutation CreateComment($content: String!, $authorId: ID!, $postId: ID!) {
-  createComment(content: $content, authorId: $authorId, postId: $postId) {
+mutation CreateComment($content: String!, $postId: ID!) {
+  createComment(content: $content, postId: $postId) {
     code
   }
 }
@@ -116,7 +116,7 @@ function PostComponent() {
             setErrorComment("Missing comment");
             return;
         }
-        comment({ variables: { content: newComment, authorId: userId, postId: id } });
+        comment({ variables: { content: newComment, postId: id } });
     };
 
     //liker/unliker un post

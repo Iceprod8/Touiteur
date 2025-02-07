@@ -1,9 +1,9 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Button, Col, Container, Form, InputGroup, Row, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
-import {jwtDecode} from "jwt-decode";
+import { AuthContext } from "../context/AuthContext"
 
 const POST_MUTATION = gql`
 mutation CreatePost($content: String!) {
@@ -67,20 +67,7 @@ function ProfileComponent() {
     const [content, setContent] = useState<String>("");
     const [errorPost, setErrorPost] = useState<string | null>(null);
 
-    const getUserIdFromToken = () => {
-      const token = sessionStorage.getItem("token");
-      if (!token) return null;
-  
-      try {
-          const decoded: any = jwtDecode(token);
-          return decoded.userId;
-      } catch (error) {
-          console.error("Invalid token", error);
-          return null;
-      }
-    };
-
-    const userId = getUserIdFromToken();
+    const { userId } = useContext(AuthContext) ?? {};
     console.log(userId);
     
     //avoir tous les posts du user connecté

@@ -7,6 +7,7 @@ type User = {
 
 type AuthContextType = {
   user: User | null;
+  userId: string | null;
   login: (token: string) => void;
   logout: () => void;
   loading: boolean;
@@ -21,6 +22,7 @@ const GET_USER = gql`
         message
         success
         user {
+         id
          username
         }
     }
@@ -28,8 +30,10 @@ const GET_USER = gql`
 `;
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
+
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const client = useApolloClient();
   const { data, loading } = useQuery(GET_USER, {
     skip: !sessionStorage.getItem("token"),
@@ -37,7 +41,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     if (data) {
-      setUser(data.getUserFromJWT);
+      setUser(data.getUserFromJWT.user);
+      setUserId(data.getUserFromJWT.user.id);
     }
   }, [data]);
 
@@ -67,11 +72,12 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const logout = () => {
     sessionStorage.removeItem("token");
     setUser(null);
+    setUserId(null); // Reset de l'userId
     client.clearStore();
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, userId, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
