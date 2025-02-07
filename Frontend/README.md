@@ -24,6 +24,7 @@ npm run dev
 
 - Page Populaires présentant les posts les plus populaires ( ==  ayant le plus de likes)
 
+![alt text](image-6.png)
 
 - Page recherchant, permettant de rechercher tous les tweets d'un utilisateur
 
