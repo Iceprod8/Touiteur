@@ -28,11 +28,7 @@ export const typeDefs = gql`
     deletePost(id: ID!): CRUDPostResponse
     updatePost(id: ID!, content: String!): CRUDPostResponse
 
-    createComment(
-      content: String!
-      authorId: ID!
-      postId: ID!
-    ): CRUDCommentResponse
+    createComment(content: String!, postId: ID!): CRUDCommentResponse
     deleteComment(id: ID!): CRUDCommentResponse
     updateComment(id: ID!, content: String!): CRUDCommentResponse
 
