@@ -1,50 +1,53 @@
-# React + TypeScript + Vite
+# Installation et lancement du server
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+npm install
+npm run graphql-codegen --watch --verbose
+npm run dev
 
-Currently, two official plugins are available:
+## Fonctionnalités
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- page register permettant de créer un user
 
-## Expanding the ESLint configuration
+![alt text](image-1.png)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- page login permettant de se connecter (gestion token)
 
-- Configure the top-level `parserOptions` property like this:
+![alt text](image-2.png)
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+*Sur la page login et register : impossible d'acceder aux autres pages*
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- Page d'acceil présentant les posts, du plus récent au moins récent
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+![alt text](image.png)
+
+
+- Page Populaires présentant les posts les plus populaires ( ==  ayant le plus de likes)
+
+
+- Page recherchant, permettant de rechercher tous les tweets d'un utilisateur
+
+![alt text](image-3.png)
+
+- Page profile, permettant de poster un touite, voir tous nos posts et les supprimer.
+
+![alt text](image-4.png)
+
+- Page Post, permettant de voir les commentaires, liker le post ou les commentaires, et ajouter un commentaire
+
+![alt text](image-5.png)
+
+
+
+
+
+- 
+
+
+
+- 
+
+
+
+
+-
