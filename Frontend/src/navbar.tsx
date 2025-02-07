@@ -11,9 +11,6 @@ interface NavbarInterface {
 
 function NavbarComponent({ isLoggedIn, onLogout }: NavbarInterface) {
   const location = useLocation();
-  //const authContext = useContext(AuthContext);
-
-  //const username = authContext?.user?.username || '';
 
   return (
     <Navbar fixed='top' bg="dark" variant="dark" className='navbar'>
