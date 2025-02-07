@@ -36,10 +36,10 @@ export const typeDefs = gql`
     deleteComment(id: ID!): CRUDCommentResponse
     updateComment(id: ID!, content: String!): CRUDCommentResponse
 
-    likePost(userId: ID!, postId: ID!): CRUDPostResponse
-    unlikePost(userId: ID!, postId: ID!): CRUDPostResponse
-    likeComment(userId: ID!, commentId: ID!): CRUDCommentResponse
-    unlikeComment(userId: ID!, commentId: ID!): CRUDCommentResponse
+    likePost(postId: ID!): CRUDPostResponse
+    unlikePost(postId: ID!): CRUDPostResponse
+    likeComment(commentId: ID!): CRUDCommentResponse
+    unlikeComment(commentId: ID!): CRUDCommentResponse
   }
 
   type User {

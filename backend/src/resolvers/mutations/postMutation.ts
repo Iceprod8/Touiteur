@@ -56,6 +56,8 @@ export const deletePost: MutationResolvers["deletePost"] = async (
     });
     if (!postToDelete)
       throw new Error("❌ Post introuvable. Vérifiez l'ID et réessayez.");
+    
+    await dataSources.db.comment.deleteMany({ where: { postId:postToDelete.id } });
 
     await dataSources.db.post.delete({ where: { id } });
     return {
