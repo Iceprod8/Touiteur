@@ -37,16 +37,16 @@ query GetPostById($id: ID!) {
 `;
 
 const COMMENT_MUTATION = gql`
-mutation CreateComment($content: String!, $authorId: ID!, $postId: ID!) {
-  createComment(content: $content, authorId: $authorId, postId: $postId) {
+mutation CreateComment($content: String!, $postId: ID!) {
+  createComment(content: $content, postId: $postId) {
     code
   }
 }
 `;
 
 const LIKE_MUTATION = gql`
-mutation Mutation($userId: ID!, $commentId: ID!) {
-  likeComment(userId: $userId, commentId: $commentId) {
+mutation Mutation($commentId: ID!) {
+  likeComment(commentId: $commentId) {
     comment {
       likedBy {
         id
@@ -57,8 +57,8 @@ mutation Mutation($userId: ID!, $commentId: ID!) {
 `;
 
 const UNLIKE_MUTATION = gql`
-mutation UnlikeComment($userId: ID!, $commentId: ID!) {
-  unlikeComment(userId: $userId, commentId: $commentId) {
+mutation UnlikeComment($commentId: ID!) {
+  unlikeComment(commentId: $commentId) {
     comment {
       likedBy {
         username
@@ -69,16 +69,16 @@ mutation UnlikeComment($userId: ID!, $commentId: ID!) {
 `;
 
 const LIKE_POST_MUTATION = gql`
-mutation CreateComment($userId: ID!, $postId: ID!) {
-  likePost(userId: $userId, postId: $postId) {
+mutation likePost($postId: ID!) {
+  likePost(postId: $postId) {
     code
   }
 }
 `;
 
 const UNLIKE_POST_MUTATION = gql`
-mutation CreateComment($userId: ID!, $postId: ID!) {
-  unlikePost(userId: $userId, postId: $postId) {
+mutation unlikePost($postId: ID!) {
+  unlikePost(postId: $postId) {
     code
   }
 }
@@ -116,7 +116,7 @@ function PostComponent() {
             setErrorComment("Missing comment");
             return;
         }
-        comment({ variables: { content: newComment, authorId: userId, postId: id } });
+        comment({ variables: { content: newComment, postId: id } });
     };
 
     //liker/unliker un post
@@ -142,9 +142,9 @@ function PostComponent() {
 
             console.log(id);
             if (isLiked) {
-                unlikePost({ variables: { userId, postId: id } });
+                unlikePost({ variables: {postId: id } });
             } else {
-                likePost({ variables: { userId, postId: id } });
+                likePost({ variables: { postId: id } });
             }
         }
     };
@@ -172,9 +172,9 @@ function PostComponent() {
 
         console.log(commentId);
         if (isLiked) {
-            unlike({ variables: { userId, commentId } });
+            unlike({ variables: { commentId } });
         } else {
-            like({ variables: { userId, commentId } });
+            like({ variables: { commentId } });
         }
     };
 

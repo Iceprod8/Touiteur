@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css'
 import { Link } from "react-router-dom";
 
-const GET_CHARACTERS = gql`
+const GET_POSTS = gql`
 query GetPosts {
     getPosts {
     code
@@ -37,25 +37,12 @@ query GetPosts {
 function AllCardsComponents() {
   const [page, setPage] = useState(1);
 
-  const { loading, error, data } = useQuery(GET_CHARACTERS, {
+  const { loading, error, data } = useQuery(GET_POSTS, {
     variables: { page }
   });
 
   console.log(data);
 
-  let active = page;
-
-  function next(page: number) {
-    if (page <= data.characters.info.pages) {
-      setPage(page);
-    }
-  }
-
-  function prev(page: number) {
-    if (page > 0) {
-      setPage(page);
-    }
-  }
 
   if (loading) return <h1>Chargement...</h1>;
   if (error) return <h1>Erreur: {error.message}</h1>;
@@ -63,15 +50,9 @@ function AllCardsComponents() {
   return (
     <div>
       <br></br>
-      <h1>All characters</h1>
       <br></br>
-      <div className='pagination'>
-        <Pagination>
-          <Pagination.Prev onClick={() => prev(active - 1)} />
-          <Pagination.Item active>{active}</Pagination.Item>
-          <Pagination.Next onClick={() => next(active + 1)} />
-        </Pagination>
-      </div>
+      <h1>Tous les posts</h1>
+      <br></br>
       <br></br>
       <Row xs={1} sm={2} md={3} lg={4} xl={4} className="g-3">
         {data.getPosts.posts.map((post: any) => (

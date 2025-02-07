@@ -1,9 +1,9 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Button, Col, Container, Form, InputGroup, Row, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
-import {jwtDecode} from "jwt-decode";
+import { AuthContext } from "../context/AuthContext"
 
 const POST_MUTATION = gql`
 mutation CreatePost($content: String!) {
@@ -67,20 +67,7 @@ function ProfileComponent() {
     const [content, setContent] = useState<String>("");
     const [errorPost, setErrorPost] = useState<string | null>(null);
 
-    const getUserIdFromToken = () => {
-      const token = sessionStorage.getItem("token");
-      if (!token) return null;
-  
-      try {
-          const decoded: any = jwtDecode(token);
-          return decoded.userId;
-      } catch (error) {
-          console.error("Invalid token", error);
-          return null;
-      }
-    };
-
-    const userId = getUserIdFromToken();
+    const { userId } = useContext(AuthContext) ?? {};
     console.log(userId);
     
     //avoir tous les posts du user connecté
@@ -124,7 +111,7 @@ function ProfileComponent() {
 
     return (
         <div>
-            <Container className="d-flex justify-content-center align-items-center min-vh-100">
+            <Container className="d-flex justify-content-center align-items-center pb-4">
                 <Row className="w-100">
                     <Col xs={12} md={12} lg={12} className="custom-container">
                         <div className="">
@@ -147,6 +134,7 @@ function ProfileComponent() {
                     </Col>
                 </Row>
             </Container>
+            <h3 className="pb-4">Tous vos tweets</h3>
             <Row xs={1} sm={2} md={3} lg={4} xl={4} className="g-3">
                 {data?.getPostsUser?.posts?.map((post: any) => (
                     <Col key={post.id}>
@@ -171,7 +159,7 @@ function ProfileComponent() {
                             <Card.Footer>
                                 <p>
                                     <span><b>Comments:</b> {post.comments.length}</span>
-                                    <span style={{ marginLeft: "10px" }}><b>Likes:</b> 8</span>
+                                    <span style={{ marginLeft: "10px" }}><b>Likes:</b> {post.likedBy.length}</span>
                                 </p>
                                 <Link to={`/post/${post.id}`}>Voir plus</Link>
                             </Card.Footer>
