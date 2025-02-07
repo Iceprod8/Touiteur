@@ -1,12 +1,13 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
+import {jwtDecode} from "jwt-decode";
 
 const POST_MUTATION = gql`
-mutation CreatePost($content: String!, $authorId: ID!) {
-  createPost(content: $content, authorId: $authorId) {
+mutation CreatePost($content: String!) {
+  createPost(content: $content) {
     code
     success
     message
@@ -27,6 +28,9 @@ query GetPostsUser($userId: ID!) {
     message
     success
     posts {
+      likedBy{
+        username
+      }
       id
       author{
         username
@@ -60,9 +64,24 @@ mutation DeletePost($id: ID!) {
 `;
 
 function ProfileComponent() {
-    const userId = "5c3cd9cc-eae3-4ea3-a1fb-d576616fde43";
     const [content, setContent] = useState<String>("");
     const [errorPost, setErrorPost] = useState<string | null>(null);
+
+    const getUserIdFromToken = () => {
+      const token = sessionStorage.getItem("token");
+      if (!token) return null;
+  
+      try {
+          const decoded: any = jwtDecode(token);
+          return decoded.userId;
+      } catch (error) {
+          console.error("Invalid token", error);
+          return null;
+      }
+    };
+
+    const userId = getUserIdFromToken();
+    console.log(userId);
     
     //avoir tous les posts du user connecté
     const { loading, error, data, refetch } = useQuery(GET_POSTS_USER, {
@@ -86,7 +105,7 @@ function ProfileComponent() {
             setErrorPost("Missing data");
             return;
         }
-        createPost({ variables: { content, authorId: userId } });
+        createPost({ variables: { content } });
     };
 
     //supprimer un post
