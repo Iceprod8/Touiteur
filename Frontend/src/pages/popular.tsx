@@ -1,11 +1,9 @@
 import { useQuery, gql } from '@apollo/client';
-
-import { useState } from 'react';
-import Pagination from 'react-bootstrap/Pagination';
 import { Card, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css'
 import { Link } from "react-router-dom";
+import { Post } from '../gql/graphql';
 
 const GET_CHARACTERS = gql`
 query GetFamousLikes {
@@ -37,27 +35,8 @@ query GetFamousLikes {
 `;
 
 function PopularComponent() {
-  const [page, setPage] = useState(1);
 
-  const { loading, error, data } = useQuery(GET_CHARACTERS, {
-    variables: { page }
-  });
-
-  console.log(data);
-
-  let active = page;
-
-  function next(page: number) {
-    if (page <= data.characters.info.pages) {
-      setPage(page);
-    }
-  }
-
-  function prev(page: number) {
-    if (page > 0) {
-      setPage(page);
-    }
-  }
+  const { loading, error, data } = useQuery(GET_CHARACTERS);
 
   if (loading) return <h1>Chargement...</h1>;
   if (error) return <h1>Erreur: {error.message}</h1>;
@@ -71,7 +50,7 @@ function PopularComponent() {
       </div>
       <br></br>
       <Row xs={1} sm={2} md={3} lg={4} xl={4} className="g-3">
-        {data.getFamousLikes.famousPosts.map((post: any) => (
+        {data.getFamousLikes.famousPosts.map((post: Post) => (
           <Col key={post.id}>
             <Card style={{ width: '18rem' }}>
               <Card.Header>{post.author.username}</Card.Header>
@@ -80,8 +59,12 @@ function PopularComponent() {
               </Card.Body>
               <Card.Footer>
                 <p>
-                  <span><b>Comments:</b> {post.comments.length}</span>
-                  <span style={{ marginLeft: "10px" }}><b>Likes:</b> {post.likedBy.length}</span>
+                  <span>
+                    <b>Comments:</b> {post.comments?.length || 0}
+                  </span>
+                  <span style={{ marginLeft: "10px" }}>
+                    <b>Likes:</b> {post.likedBy?.length || 0}
+                  </span>
                 </p>
                 <Link to={`/post/${post.id}`}>Voir plus</Link>
               </Card.Footer>
