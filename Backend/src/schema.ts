@@ -25,22 +25,18 @@ export const typeDefs = gql`
     updateUser(username: String!, password: String!): RUUserResponse
     signIn(username: String!, password: String!): AuthUserResponse
 
-    createPost(content: String!, authorId: ID!): CRUDPostResponse
+    createPost(content: String!): CRUDPostResponse
     deletePost(id: ID!): CRUDPostResponse
     updatePost(id: ID!, content: String!): CRUDPostResponse
 
-    createComment(
-      content: String!
-      authorId: ID!
-      postId: ID!
-    ): CRUDCommentResponse
+    createComment(content: String!, postId: ID!): CRUDCommentResponse
     deleteComment(id: ID!): CRUDCommentResponse
     updateComment(id: ID!, content: String!): CRUDCommentResponse
 
-    likePost(userId: ID!, postId: ID!): CRUDPostResponse
-    unlikePost(userId: ID!, postId: ID!): CRUDPostResponse
-    likeComment(userId: ID!, commentId: ID!): CRUDCommentResponse
-    unlikeComment(userId: ID!, commentId: ID!): CRUDCommentResponse
+    likePost(postId: ID!): CRUDPostResponse
+    unlikePost(postId: ID!): CRUDPostResponse
+    likeComment(commentId: ID!): CRUDCommentResponse
+    unlikeComment(commentId: ID!): CRUDCommentResponse
   }
 
   type User {

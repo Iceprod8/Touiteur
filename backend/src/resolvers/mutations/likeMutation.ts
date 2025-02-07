@@ -3,10 +3,18 @@ import { MutationResolvers } from "../../types";
 
 export const likePost: MutationResolvers["likePost"] = async (
   _,
-  { userId, postId },
-  { dataSources }: DataSourceContext
+  { postId },
+  { dataSources, user }: DataSourceContext
 ) => {
   try {
+    if (!user) {
+      return {
+        code: 401,
+        message: "Authentification requise",
+        success: false,
+        user: null,
+      };
+    }
     const post = await dataSources.db.post.findUnique({
       where: { id: postId },
       include: { likedBy: true },
@@ -15,7 +23,9 @@ export const likePost: MutationResolvers["likePost"] = async (
     if (!post)
       throw new Error("❌ Post introuvable. Vérifiez l'ID et réessayez.");
 
-    const alreadyLiked = post.likedBy.some((user) => user.id === userId);
+    const alreadyLiked = post.likedBy.some(
+      (userliked) => userliked.id === user.id
+    );
     if (alreadyLiked)
       throw new Error("❌ Ce post est déjà liké par cet utilisateur.");
 
@@ -23,7 +33,7 @@ export const likePost: MutationResolvers["likePost"] = async (
       where: { id: postId },
       data: {
         likedBy: {
-          connect: { id: userId },
+          connect: { id: user.id },
         },
       },
     });
@@ -43,10 +53,19 @@ export const likePost: MutationResolvers["likePost"] = async (
 
 export const unlikePost: MutationResolvers["unlikePost"] = async (
   _,
-  { userId, postId },
-  { dataSources }: DataSourceContext
+  { postId },
+  { dataSources, user }: DataSourceContext
 ) => {
   try {
+    if (!user) {
+      return {
+        code: 401,
+        message: "Authentification requise",
+        success: false,
+        user: null,
+      };
+    }
+
     const post = await dataSources.db.post.findUnique({
       where: { id: postId },
       include: { likedBy: true },
@@ -55,7 +74,9 @@ export const unlikePost: MutationResolvers["unlikePost"] = async (
     if (!post)
       throw new Error("❌ Post introuvable. Vérifiez l'ID et réessayez.");
 
-    const alreadyLiked = post.likedBy.some((user) => user.id === userId);
+    const alreadyLiked = post.likedBy.some(
+      (userliked) => userliked.id === user.id
+    );
     if (!alreadyLiked)
       throw new Error("❌ Ce post n'est pas liké par cet utilisateur.");
 
@@ -63,7 +84,7 @@ export const unlikePost: MutationResolvers["unlikePost"] = async (
       where: { id: postId },
       data: {
         likedBy: {
-          disconnect: { id: userId },
+          disconnect: { id: user.id },
         },
       },
     });
@@ -83,10 +104,18 @@ export const unlikePost: MutationResolvers["unlikePost"] = async (
 
 export const likeComment: MutationResolvers["likeComment"] = async (
   _,
-  { userId, commentId },
-  { dataSources }: DataSourceContext
+  { commentId },
+  { dataSources, user }: DataSourceContext
 ) => {
   try {
+    if (!user) {
+      return {
+        code: 401,
+        message: "Authentification requise",
+        success: false,
+        user: null,
+      };
+    }
     const comment = await dataSources.db.comment.findUnique({
       where: { id: commentId },
       include: { likedBy: true },
@@ -97,7 +126,9 @@ export const likeComment: MutationResolvers["likeComment"] = async (
         "❌ Commentaire introuvable. Vérifiez l'ID et réessayez."
       );
 
-    const alreadyLiked = comment.likedBy.some((user) => user.id === userId);
+    const alreadyLiked = comment.likedBy.some(
+      (userliked) => userliked.id === user.id
+    );
     if (alreadyLiked)
       throw new Error("❌ Ce commentaire est déjà liké par cet utilisateur.");
 
@@ -105,7 +136,7 @@ export const likeComment: MutationResolvers["likeComment"] = async (
       where: { id: commentId },
       data: {
         likedBy: {
-          connect: { id: userId },
+          connect: { id: user.id },
         },
       },
     });
@@ -125,10 +156,18 @@ export const likeComment: MutationResolvers["likeComment"] = async (
 
 export const unlikeComment: MutationResolvers["unlikeComment"] = async (
   _,
-  { userId, commentId },
-  { dataSources }: DataSourceContext
+  { commentId },
+  { dataSources, user }: DataSourceContext
 ) => {
   try {
+    if (!user) {
+      return {
+        code: 401,
+        message: "Authentification requise",
+        success: false,
+        user: null,
+      };
+    }
     const comment = await dataSources.db.comment.findUnique({
       where: { id: commentId },
       include: { likedBy: true },
@@ -139,7 +178,9 @@ export const unlikeComment: MutationResolvers["unlikeComment"] = async (
         "❌ Commentaire introuvable. Vérifiez l'ID et réessayez."
       );
 
-    const alreadyLiked = comment.likedBy.some((user) => user.id === userId);
+    const alreadyLiked = comment.likedBy.some(
+      (userliked) => userliked.id === user.id
+    );
     if (!alreadyLiked)
       throw new Error("❌ Ce commentaire n'est pas liké par cet utilisateur.");
 
@@ -147,7 +188,7 @@ export const unlikeComment: MutationResolvers["unlikeComment"] = async (
       where: { id: commentId },
       data: {
         likedBy: {
-          disconnect: { id: userId },
+          disconnect: { id: user.id },
         },
       },
     });
