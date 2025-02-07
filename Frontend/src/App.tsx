@@ -10,10 +10,10 @@ import RecentComponent from './pages/recent';
 import LoginComponent from './pages/login';
 import SearchComponent from './pages/search';
 import PostComponent from './pages/post'
-import ProfileComponent from './pages/Profile';
 import RegisterComponent from './pages/register';
 import AuthProvider, { AuthContext } from './context/AuthContext';
 import PrivateRoute from './auth/PrivateRoute';
+import ProfileComponent from './pages/Profile';
 
 const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' });
 
