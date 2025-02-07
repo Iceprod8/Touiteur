@@ -69,6 +69,15 @@ export type Comment = {
   post: Post;
 };
 
+export type GetFamousLikesResponse = {
+  __typename?: 'GetFamousLikesResponse';
+  code: Scalars['Int']['output'];
+  famousComments: Array<Maybe<Comment>>;
+  famousPosts: Array<Maybe<Post>>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
 export type GetLikesResponse = {
   __typename?: 'GetLikesResponse';
   code: Scalars['Int']['output'];
@@ -188,6 +197,7 @@ export type Query = {
   getComments?: Maybe<CrudCommentsResponse>;
   getCommentsPost?: Maybe<CrudCommentResponse>;
   getCommentsUser?: Maybe<CrudCommentResponse>;
+  getFamousLikes?: Maybe<GetFamousLikesResponse>;
   getPostById?: Maybe<CrudPostResponse>;
   getPosts?: Maybe<CrudPostsResponse>;
   getPostsUser?: Maybe<CrudPostsResponse>;
@@ -333,6 +343,7 @@ export type ResolversTypes = {
   CRUDPostResponse: ResolverTypeWrapper<Omit<CrudPostResponse, 'post'> & { post?: Maybe<ResolversTypes['Post']> }>;
   CRUDPostsResponse: ResolverTypeWrapper<Omit<CrudPostsResponse, 'posts'> & { posts: Array<Maybe<ResolversTypes['Post']>> }>;
   Comment: ResolverTypeWrapper<CommentModel>;
+  GetFamousLikesResponse: ResolverTypeWrapper<Omit<GetFamousLikesResponse, 'famousComments' | 'famousPosts'> & { famousComments: Array<Maybe<ResolversTypes['Comment']>>, famousPosts: Array<Maybe<ResolversTypes['Post']>> }>;
   GetLikesResponse: ResolverTypeWrapper<Omit<GetLikesResponse, 'likedComments' | 'likedPosts'> & { likedComments: Array<Maybe<ResolversTypes['Comment']>>, likedPosts: Array<Maybe<ResolversTypes['Post']>> }>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
@@ -353,6 +364,7 @@ export type ResolversParentTypes = {
   CRUDPostResponse: Omit<CrudPostResponse, 'post'> & { post?: Maybe<ResolversParentTypes['Post']> };
   CRUDPostsResponse: Omit<CrudPostsResponse, 'posts'> & { posts: Array<Maybe<ResolversParentTypes['Post']>> };
   Comment: CommentModel;
+  GetFamousLikesResponse: Omit<GetFamousLikesResponse, 'famousComments' | 'famousPosts'> & { famousComments: Array<Maybe<ResolversParentTypes['Comment']>>, famousPosts: Array<Maybe<ResolversParentTypes['Post']>> };
   GetLikesResponse: Omit<GetLikesResponse, 'likedComments' | 'likedPosts'> & { likedComments: Array<Maybe<ResolversParentTypes['Comment']>>, likedPosts: Array<Maybe<ResolversParentTypes['Post']>> };
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
@@ -414,6 +426,15 @@ export type CommentResolvers<ContextType = DataSourceContext, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GetFamousLikesResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['GetFamousLikesResponse'] = ResolversParentTypes['GetFamousLikesResponse']> = {
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  famousComments?: Resolver<Array<Maybe<ResolversTypes['Comment']>>, ParentType, ContextType>;
+  famousPosts?: Resolver<Array<Maybe<ResolversTypes['Post']>>, ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type GetLikesResponseResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['GetLikesResponse'] = ResolversParentTypes['GetLikesResponse']> = {
   code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   likedComments?: Resolver<Array<Maybe<ResolversTypes['Comment']>>, ParentType, ContextType>;
@@ -454,6 +475,7 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
   getComments?: Resolver<Maybe<ResolversTypes['CRUDCommentsResponse']>, ParentType, ContextType>;
   getCommentsPost?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<QueryGetCommentsPostArgs, 'postId'>>;
   getCommentsUser?: Resolver<Maybe<ResolversTypes['CRUDCommentResponse']>, ParentType, ContextType, RequireFields<QueryGetCommentsUserArgs, 'userId'>>;
+  getFamousLikes?: Resolver<Maybe<ResolversTypes['GetFamousLikesResponse']>, ParentType, ContextType>;
   getPostById?: Resolver<Maybe<ResolversTypes['CRUDPostResponse']>, ParentType, ContextType, RequireFields<QueryGetPostByIdArgs, 'id'>>;
   getPosts?: Resolver<Maybe<ResolversTypes['CRUDPostsResponse']>, ParentType, ContextType>;
   getPostsUser?: Resolver<Maybe<ResolversTypes['CRUDPostsResponse']>, ParentType, ContextType, RequireFields<QueryGetPostsUserArgs, 'userId'>>;
@@ -488,6 +510,7 @@ export type Resolvers<ContextType = DataSourceContext> = {
   CRUDPostResponse?: CrudPostResponseResolvers<ContextType>;
   CRUDPostsResponse?: CrudPostsResponseResolvers<ContextType>;
   Comment?: CommentResolvers<ContextType>;
+  GetFamousLikesResponse?: GetFamousLikesResponseResolvers<ContextType>;
   GetLikesResponse?: GetLikesResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
