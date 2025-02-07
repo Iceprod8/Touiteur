@@ -1,88 +1,97 @@
-// import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql } from '@apollo/client';
 
-// import { useState } from 'react';
-// import Pagination from 'react-bootstrap/Pagination';
-// import { Card, Row, Col } from 'react-bootstrap';
+import { useState } from 'react';
+import Pagination from 'react-bootstrap/Pagination';
+import { Card, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css'
+import { Link } from "react-router-dom";
+
+const GET_CHARACTERS = gql`
+query GetFamousLikes {
+  getFamousLikes {
+    code
+    message
+    success
+    famousComments {
+      content
+      likedBy {
+        username
+      }
+    }
+    famousPosts {
+      id
+      content
+      comments {
+        id
+      }
+      author {
+        username
+      }
+      likedBy {
+        username
+      }
+    }
+  }
+}
+`;
 
 function PopularComponent() {
+  const [page, setPage] = useState(1);
 
-  // // const GET_CHARACTERS = graphql(`#gql
-  //   const GET_POPULAR = gql`
-  //   query characters($page: Int){
-  //   characters(page: $page) {
-  //       info {
-  //       pages
-  //       }
-  //       results {
-  //       id
-  //       name
-  //       status
-  //       gender
-  //       image
-  //       }
-  //   }
-  //   }
-  //   `;
+  const { loading, error, data } = useQuery(GET_CHARACTERS, {
+    variables: { page }
+  });
 
-  // const [page, setPage] = useState(1);
+  console.log(data);
 
-  // const { loading, error, data } = useQuery(GET_POPULAR, {
-  //   variables: { page }
-  // });
+  let active = page;
 
-  // console.log(data);
+  function next(page: number) {
+    if (page <= data.characters.info.pages) {
+      setPage(page);
+    }
+  }
 
-  // let active = page;
+  function prev(page: number) {
+    if (page > 0) {
+      setPage(page);
+    }
+  }
 
-  // function next(page: number) {
-  //   if (page <= data.characters.info.pages) {
-  //     setPage(page);
-  //   }
-  // }
-
-  // function prev(page: number) {
-  //   if (page > 0) {
-  //     setPage(page);
-  //   }
-  // }
-
-  // if (loading) return <h1>Chargement...</h1>;
-  // if (error) return <h1>Erreur: {error.message}</h1>;
+  if (loading) return <h1>Chargement...</h1>;
+  if (error) return <h1>Erreur: {error.message}</h1>;
 
   return (
     <div>
       <br></br>
       <h1>All characters</h1>
       <br></br>
-      {/* <div className='pagination'>
-        <Pagination>
-          <Pagination.Prev onClick={() => prev(active - 1)} />
-          <Pagination.Item active>{active}</Pagination.Item>
-          <Pagination.Next onClick={() => next(active + 1)} />
-        </Pagination>
+      <div className='pagination'>
       </div>
       <br></br>
       <Row xs={1} sm={2} md={3} lg={4} xl={4} className="g-3">
-        {data.characters.results.map((character: any) => (
-          <Col key={character.id}>
+        {data.getFamousLikes.famousPosts.map((post: any) => (
+          <Col key={post.id}>
             <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top" src={character.image} />
+              <Card.Header>{post.author.username}</Card.Header>
               <Card.Body>
-                <Card.Title>{character.name}</Card.Title>
-                <Card.Text>
-                  <b>Statut: </b>{character.status} <br></br>
-                  <b>Gender: </b>{character.gender}
-                </Card.Text>
+                <Card.Text>{post.content}</Card.Text>
               </Card.Body>
+              <Card.Footer>
+                <p>
+                  <span><b>Comments:</b> {post.comments.length}</span>
+                  <span style={{ marginLeft: "10px" }}><b>Likes:</b> {post.likedBy.length}</span>
+                </p>
+                <Link to={`/post/${post.id}`}>Voir plus</Link>
+              </Card.Footer>
             </Card>
           </Col>
         ))}
-      </Row> */}
+      </Row>
     </div>
 
   );
 }
-  
-  export default PopularComponent
+
+export default PopularComponent
