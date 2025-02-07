@@ -7,8 +7,7 @@
 ### 1️⃣ Prérequis
 
 - [Node.js](https://nodejs.org/) installé (version recommandée : 18.x)
-- [MongoDB](https://www.mongodb.com/) si nécessaire
-- Un gestionnaire de paquets comme `npm` ou `yarn`
+- Un gestionnaire de paquets comme `npm`
 
 ### 2️⃣ Cloner le projet
 
